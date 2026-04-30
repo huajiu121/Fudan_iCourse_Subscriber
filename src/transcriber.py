@@ -1,4 +1,9 @@
-"""Speech-to-text using ffmpeg pipe + sherpa-onnx SenseVoice + silero VAD."""
+"""Speech-to-text using ffmpeg pipe + sherpa-onnx FireRed ASR2 CTC + silero VAD.
+
+Returns both the joined transcript string AND a list of per-segment dicts
+{start_ms, end_ms, text}. The caller persists only the joined string;
+the segments are used in-memory for 10-min bucketed LLM prompt assembly.
+"""
 
 import os
 import re
@@ -13,7 +18,7 @@ from . import config
 
 
 class Transcriber:
-    """SenseVoice-based transcriber with VAD segmentation."""
+    """FireRed-ASR2-CTC transcriber with VAD segmentation."""
 
     def __init__(self):
         self._recognizer = None
@@ -21,6 +26,7 @@ class Transcriber:
         self._vad_config = None
         self._last_duration = 0.0  # audio seconds from last transcription
         self._last_transcript = ""  # transcript from last transcription
+        self._last_segments: list[dict] = []  # in-memory segment timings
         self._media_duration = None  # total media duration parsed from ffmpeg stderr
 
     def _init(self):
@@ -28,22 +34,33 @@ class Transcriber:
             return
 
         model_dir = config.SENSEVOICE_MODEL_DIR
-        model_path = os.path.join(model_dir, "model.int8.onnx")
+        # FireRed ASR2 CTC: prefer int8 quantized variant, fall back to fp32
+        model_int8 = os.path.join(model_dir, "model.int8.onnx")
+        model_fp32 = os.path.join(model_dir, "model.onnx")
+        if os.path.isfile(model_int8):
+            model_path = model_int8
+        elif os.path.isfile(model_fp32):
+            model_path = model_fp32
+        else:
+            raise FileNotFoundError(
+                f"FireRed ASR2 CTC model not found at '{model_int8}' or '{model_fp32}'. "
+                f"Download from https://github.com/k2-fsa/sherpa-onnx/releases/tag/asr-models"
+            )
+
         tokens_path = os.path.join(model_dir, "tokens.txt")
         vad_path = config.SILERO_VAD_PATH
 
-        for p, name in [(model_path, "SenseVoice model"), (tokens_path, "tokens.txt"), (vad_path, "silero_vad.onnx")]:
+        for p, name in [(tokens_path, "tokens.txt"), (vad_path, "silero_vad.onnx")]:
             if not os.path.isfile(p):
                 raise FileNotFoundError(
                     f"{name} not found at '{p}'. "
                     f"Download from https://github.com/k2-fsa/sherpa-onnx/releases/tag/asr-models"
                 )
 
-        print("[Transcriber] Loading SenseVoice model...")
-        self._recognizer = sherpa_onnx.OfflineRecognizer.from_sense_voice(
+        print(f"[Transcriber] Loading FireRed ASR2 CTC model from {model_path}...")
+        self._recognizer = sherpa_onnx.OfflineRecognizer.from_fire_red_asr_ctc(
             model=model_path,
             tokens=tokens_path,
-            use_itn=True,
             num_threads=2,
             debug=False,
         )
@@ -61,24 +78,42 @@ class Transcriber:
             self._vad_config, buffer_size_in_seconds=120
         )
 
-    def _drain_segments(self, texts: list[str]):
-        """Recognize and collect all complete speech segments from VAD."""
+    def _drain_segments(self, segments: list[dict]):
+        """Recognize and collect all complete speech segments from VAD.
+
+        Each captured segment becomes a dict {start_ms, end_ms, text} appended
+        to `segments`. Segment timing is taken from VAD's sample-position
+        counters (relative to stream start).
+        """
         while not self._vad.empty():
-            segment = self._vad.front.samples
+            speech = self._vad.front
+            samples = speech.samples
+            seg_start_samples = int(getattr(speech, "start", 0))
             self._vad.pop()
             stream = self._recognizer.create_stream()
-            stream.accept_waveform(16000, segment)
+            stream.accept_waveform(16000, samples)
             self._recognizer.decode_stream(stream)
             text = stream.result.text.strip()
             if text:
-                texts.append(text)
+                start_ms = int(seg_start_samples / 16000 * 1000)
+                end_ms = int((seg_start_samples + len(samples)) / 16000 * 1000)
+                segments.append({
+                    "start_ms": start_ms,
+                    "end_ms": end_ms,
+                    "text": text,
+                })
 
-    def _transcribe_from_cmd(self, cmd: list[str], timeout: int = 7200) -> str:
-        """Shared transcription logic: run ffmpeg cmd, feed VAD, return text.
+    def _transcribe_from_cmd(self, cmd: list[str],
+                             timeout: int = 7200) -> tuple[str, list[dict]]:
+        """Shared transcription logic: run ffmpeg cmd, feed VAD, return (text, segments).
 
         Args:
             cmd: ffmpeg command list.
             timeout: Max seconds before killing the process.
+
+        Returns:
+            (transcript, segments) — transcript is the joined string,
+            segments is a list of {start_ms, end_ms, text} (used in-memory only).
         """
         self._init()
         self._reset_vad()
@@ -105,7 +140,7 @@ class Transcriber:
         chunk_size = 16000  # read 1 second at a time from ffmpeg
         bytes_per_sample = 4  # float32
 
-        texts = []
+        segments: list[dict] = []
         total_read = 0
         total_bytes = 0
         last_report = t0
@@ -140,40 +175,44 @@ class Transcriber:
                         f"[Transcriber] Progress: {audio_pos:.0f}s audio,"
                         f" {total_bytes / 1024 / 1024:.1f} MB received,"
                         f" {speed_kbps:.1f} KB/s,"
-                        f" {len(texts)} segments so far",
+                        f" {len(segments)} segments so far",
                         flush=True,
                     )
                     last_report = now
 
                 # Feed samples to VAD in window-sized chunks
-                prev_count = len(texts)
+                prev_count = len(segments)
                 idx = 0
                 while idx + window_size <= len(samples):
                     self._vad.accept_waveform(samples[idx:idx + window_size])
                     idx += window_size
-                    self._drain_segments(texts)
+                    self._drain_segments(segments)
 
                 # Handle remaining samples (less than window_size)
                 if idx < len(samples):
                     self._vad.accept_waveform(samples[idx:])
 
                 # Track when we last got a speech segment
-                if len(texts) > prev_count:
+                if len(segments) > prev_count:
                     last_segment_at = audio_pos
                     silence_marked = False
 
                 # Detect long silence gap (suspected audio cutoff)
                 if (not silence_marked
-                        and texts
+                        and segments
                         and audio_pos - last_segment_at >= silence_gap_threshold):
                     gap_min = (audio_pos - last_segment_at) / 60
-                    marker = (
+                    marker_text = (
                         f"\n\n[注意：从 {last_segment_at / 60:.0f} 分钟处起"
                         f"已超过 {gap_min:.0f} 分钟未检测到语音，"
                         f"音频可能已中断或录音设备出现故障。"
                         f"以下内容可能不完整。]\n\n"
                     )
-                    texts.append(marker)
+                    segments.append({
+                        "start_ms": int(last_segment_at * 1000),
+                        "end_ms": int(audio_pos * 1000),
+                        "text": marker_text,
+                    })
                     silence_marked = True
                     print(
                         f"[Transcriber] WARNING: {gap_min:.0f}min silence"
@@ -183,7 +222,7 @@ class Transcriber:
 
             # Flush VAD
             self._vad.flush()
-            self._drain_segments(texts)
+            self._drain_segments(segments)
         finally:
             if proc.poll() is None:
                 proc.kill()
@@ -233,19 +272,25 @@ class Transcriber:
             )
 
         speed_kbps = (total_bytes / 1024) / elapsed if elapsed > 0 else 0
-        transcript = " ".join(texts)
+        transcript = " ".join(s["text"] for s in segments)
 
         # Final silence check: if audio ended with a long silent tail
         if (not silence_marked
-                and texts
+                and segments
                 and duration - last_segment_at >= silence_gap_threshold):
             gap_min = (duration - last_segment_at) / 60
-            transcript += (
+            tail_marker = (
                 f"\n\n[注意：从 {last_segment_at / 60:.0f} 分钟处起"
                 f"至音频结束（{duration / 60:.0f} 分钟），"
                 f"共 {gap_min:.0f} 分钟未检测到语音，"
                 f"音频可能已中断或录音设备出现故障。以上内容可能不完整。]"
             )
+            transcript += tail_marker
+            segments.append({
+                "start_ms": int(last_segment_at * 1000),
+                "end_ms": int(duration * 1000),
+                "text": tail_marker,
+            })
             print(
                 f"[Transcriber] WARNING: audio ended with {gap_min:.0f}min"
                 f" of silence after {last_segment_at / 60:.0f}min",
@@ -255,14 +300,18 @@ class Transcriber:
             f"[Transcriber] Done at {time.strftime('%H:%M:%S')}:"
             f" {duration:.0f}s audio, {total_bytes / 1024 / 1024:.1f} MB,"
             f" avg {speed_kbps:.1f} KB/s,"
-            f" {len(transcript)} chars, {len(texts)} segments in {elapsed:.0f}s",
+            f" {len(transcript)} chars, {len(segments)} segments in {elapsed:.0f}s",
             flush=True,
         )
         self._last_transcript = transcript
-        return transcript
+        self._last_segments = segments
+        return transcript, segments
 
-    def transcribe_video(self, video_path: str) -> str:
-        """Transcribe a local video file via ffmpeg pipe."""
+    def transcribe_video(self, video_path: str) -> tuple[str, list[dict]]:
+        """Transcribe a local video file via ffmpeg pipe.
+
+        Returns (transcript, segments).
+        """
         cmd = [
             "ffmpeg", "-i", video_path,
             "-ar", "16000", "-ac", "1",
@@ -293,7 +342,8 @@ class Transcriber:
         return None
 
     def transcribe_url(self, url: str, timeout: int = 7200,
-                       http_headers: str | None = None) -> str:
+                       http_headers: str | None = None
+                       ) -> tuple[str, list[dict]]:
         """Stream audio directly from a URL (no video download needed).
 
         Args:
@@ -301,6 +351,11 @@ class Transcriber:
             timeout: Max seconds before killing the process.
             http_headers: ffmpeg-compatible HTTP headers string,
                           e.g. "Cookie: x=y\\r\\nUser-Agent: z\\r\\n"
+
+        Returns:
+            (transcript, segments) tuple. Segments hold per-VAD-segment
+            timestamps and are intended to be passed directly to bucketer
+            without persisting to DB.
 
         Raises:
             IncompleteAudioError: If received audio is < 90% of the media's
@@ -318,7 +373,7 @@ class Transcriber:
             "-ar", "16000", "-ac", "1",
             "-f", "f32le", "-",
         ]
-        transcript = self._transcribe_from_cmd(cmd, timeout=timeout)
+        transcript, segments = self._transcribe_from_cmd(cmd, timeout=timeout)
 
         # Check completeness using duration parsed from ffmpeg stderr
         if self._media_duration and self._media_duration > 0:
@@ -332,7 +387,7 @@ class Transcriber:
                     expected_duration=self._media_duration,
                 )
 
-        return transcript
+        return transcript, segments
 
 
 class IncompleteAudioError(RuntimeError):

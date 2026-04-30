@@ -122,6 +122,62 @@ class ICourseClient:
 
         return {"title": title, "teacher": teacher, "lectures": lectures}
 
+    def get_ppt_list(self, course_id: str, sub_id: str,
+                     per_page: int = 100) -> list[dict]:
+        """Fetch PPT screenshot list for a lecture.
+
+        Walks pagination until exhausted. Returns a flat list of items, each:
+            {
+              "id": int,                # row id
+              "pptimgurl": str,         # full image URL (used for OCR)
+              "pptthumb": str,          # thumbnail URL (kept for reference)
+              "created_sec": int,       # offset within lecture, in seconds
+              "created_ms": int,        # original epoch ms timestamp
+              "taskid": str,
+            }
+        Sorted by created_sec ascending.
+        """
+        import json
+        items = []
+        page = 1
+        while True:
+            url = f"{self.base_url}/pptnote/v1/schedule/search-ppt"
+            resp = self.vpn.get(
+                url,
+                params={
+                    "course_id": course_id, "sub_id": sub_id,
+                    "page": page, "per_page": per_page,
+                },
+            )
+            resp.raise_for_status()
+            data = resp.json()
+            if data.get("code") != 0:
+                raise RuntimeError(f"search-ppt failed: {data.get('msg')}")
+            page_items = data.get("list", [])
+            if not page_items:
+                break
+            for raw in page_items:
+                try:
+                    content = json.loads(raw.get("content", "{}"))
+                except (ValueError, TypeError):
+                    continue
+                img_url = content.get("pptimgurl")
+                if not img_url:
+                    continue
+                items.append({
+                    "id": raw.get("id"),
+                    "pptimgurl": img_url,
+                    "pptthumb": content.get("pptthumb", ""),
+                    "created_sec": int(raw.get("created_sec", 0) or 0),
+                    "created_ms": int(content.get("created", 0) or 0),
+                    "taskid": content.get("taskid", ""),
+                })
+            if len(page_items) < per_page:
+                break
+            page += 1
+        items.sort(key=lambda x: x["created_sec"])
+        return items
+
     def get_course_list(
         self, term: str = "24", page: int = 1, per_page: int = 20
     ) -> dict:

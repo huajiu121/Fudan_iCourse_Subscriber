@@ -7,13 +7,90 @@ Runs a single check: login → detect new lectures → stream audio → transcri
 import time
 import traceback
 
-from src import config
+from src import bucketer, config
 from src.database import Database
 from src.emailer import Emailer
 from src.icourse import ICourseClient
+from src.ocr import ocr_image_text
+from src.ppt_dedup import filter_pages
+from src.ppt_fetcher import fetch_ppt_image
 from src.summarizer import Summarizer
 from src.transcriber import IncompleteAudioError, NoAudioStreamError, Transcriber
 from src.webvpn import WebVPNSession
+
+
+def _fetch_and_ocr_ppts(
+    client: ICourseClient, db: Database, course_id: str, sub_id: str,
+) -> None:
+    """Make sure every PPT page for this lecture has reached a final OCR status.
+
+    Steps:
+      1. Fetch the latest PPT page list from iCourse and INSERT OR IGNORE
+         each into ppt_pages with status='pending'. Repeated calls are safe;
+         only previously-unknown pages are added.
+      2. For every still-pending row, download the image and OCR it. Each
+         page commits to DB independently so the work is resumable across
+         interrupted runs and concurrent workers (SQLite WAL row-level locks).
+
+    Failures (network, OCR engine) flip the row to 'failed' and continue;
+    bucketer queries only 'done' rows so 'failed' pages simply drop out.
+    """
+    try:
+        ppt_items = client.get_ppt_list(course_id, sub_id)
+    except Exception as e:
+        print(f"    [WARN] PPT list fetch failed: {type(e).__name__}: {e}")
+        ppt_items = []
+
+    if ppt_items:
+        for idx, item in enumerate(ppt_items, start=1):
+            item["page_num"] = idx
+        inserted = db.insert_ppt_pages_pending(sub_id, ppt_items)
+        total = db.count_total_ppt_pages(sub_id)
+        print(f"    PPT pages: {total} total ({inserted} newly registered)")
+
+    pending = db.get_pending_ppt_pages(sub_id)
+    if not pending:
+        return
+
+    print(f"    OCR: {len(pending)} pending page(s)...")
+    done_count = 0
+    failed_count = 0
+    for p in pending:
+        page_num = p["page_num"]
+        img = fetch_ppt_image(client, p)
+        if img is None:
+            db.update_ppt_page(sub_id, page_num, None, "failed")
+            failed_count += 1
+            continue
+        try:
+            text = ocr_image_text(img)
+        except Exception as e:
+            print(f"      page {page_num}: OCR error {type(e).__name__}: {e}")
+            db.update_ppt_page(sub_id, page_num, None, "failed")
+            failed_count += 1
+            continue
+        db.update_ppt_page(sub_id, page_num, text, "done")
+        done_count += 1
+    print(f"    OCR done: {done_count} ok, {failed_count} failed")
+
+
+def _build_filtered_pages(db: Database, sub_id: str) -> list[dict]:
+    """Read all done OCR pages for sub_id, drop classroom-desktop / dup pages.
+
+    Filtering is done in-memory every prompt build so the DB stays a faithful
+    record of what the OCR step produced; removed pages can resurface if the
+    rules change later.
+    """
+    all_done = db.get_done_ppt_pages(sub_id)
+    if not all_done:
+        return []
+    kept, stats = filter_pages(all_done)
+    if stats["desktop_dropped"] or stats["jaccard_dropped"]:
+        print(
+            f"    Filter: -{stats['desktop_dropped']} desktop,"
+            f" -{stats['jaccard_dropped']} dup → {len(kept)} pages kept"
+        )
+    return kept
 
 
 def process_lecture(
@@ -25,10 +102,12 @@ def process_lecture(
     course_title: str,
     lecture: dict,
 ) -> str | None:
-    """Download, transcribe, and summarize a single lecture.
+    """Download, transcribe, OCR PPTs, and summarize a single lecture.
 
-    Supports stage-skipping: if a previous run already produced a transcript
-    or summary, that stage is not repeated.
+    Stage-skipping: a previously-saved transcript is reused; PPT OCR is
+    resumed page-by-page; a v2 (PPT-aware) summary is reused as-is. The
+    transcript_segments returned by the transcriber are kept ONLY in
+    memory and discarded after the bucketer assembles the LLM prompt.
 
     Returns the summary string, or None if no summary was produced.
     """
@@ -43,7 +122,13 @@ def process_lecture(
     # Check existing progress for stage-skipping
     existing = db.get_lecture(sub_id)
     has_transcript = existing and existing.get("transcript")
-    has_summary = existing and existing.get("summary")
+    has_v2_summary = (
+        existing
+        and existing.get("summary")
+        and (existing.get("summary_format_version") or 0) >= 1
+    )
+
+    transcript_segments: list[dict] | None = None
 
     # 1) Transcribe (stream audio directly from CDN — no video download)
     if has_transcript:
@@ -63,7 +148,7 @@ def process_lecture(
         max_attempts = 3
         for attempt in range(1, max_attempts + 1):
             try:
-                transcript = transcriber.transcribe_url(
+                transcript, transcript_segments = transcriber.transcribe_url(
                     vpn_url, http_headers=http_headers,
                 )
                 db.update_transcript(sub_id, transcript)
@@ -78,8 +163,8 @@ def process_lecture(
                     print(f"    Retrying with fresh connection...")
                 else:
                     print(f"    [FAIL] All {max_attempts} attempts got incomplete audio, using best result.")
-                    # Use the partial transcript rather than failing entirely
                     transcript = transcriber._last_transcript
+                    transcript_segments = transcriber._last_segments
                     db.update_transcript(sub_id, transcript)
             except NoAudioStreamError as e:
                 print(f"    [SKIP] Video-only (no audio stream): {e}")
@@ -91,23 +176,36 @@ def process_lecture(
                 db.update_error(sub_id, "transcribe", str(e))
                 raise
 
-    # 2) Summarize
+    # 2) PPT list + OCR (resumable page-by-page)
+    try:
+        _fetch_and_ocr_ppts(client, db, course_id, sub_id)
+    except Exception as e:
+        # OCR is best-effort; failures shouldn't kill the lecture.
+        print(f"    [WARN] PPT OCR phase failed: {type(e).__name__}: {e}")
+
+    # 3) Summarize
     if not transcript.strip():
         print(f"    Empty transcript, skipping summary.")
         db.mark_processed(sub_id)
         db.clear_error(sub_id)
         return None
 
-    if has_summary:
-        print(f"    Summary exists ({len(existing['summary'])} chars), skipping summarization.")
+    if has_v2_summary:
+        print(f"    v2 summary exists ({len(existing['summary'])} chars), skipping.")
         summary = existing["summary"]
     else:
         try:
-            print(f"    [Time] Generating summary at {time.strftime('%H:%M:%S')}")
-            print(f"    Transcript length: {len(transcript)} chars")
-            summary, model_used = summarizer.summarize(course_title, transcript)
+            kept_pages = _build_filtered_pages(db, sub_id)
+            prompt_text, mode = bucketer.assemble(
+                transcript, transcript_segments, kept_pages,
+            )
+            print(
+                f"    [Time] Generating summary at {time.strftime('%H:%M:%S')}"
+                f" — mode={mode}, prompt={len(prompt_text)} chars"
+            )
+            summary, model_used = summarizer.summarize(course_title, prompt_text)
             print(f"    [OK] Summary by {model_used}: {len(summary)} chars")
-            db.update_summary_with_model(sub_id, summary, model_used)
+            db.update_summary_v2(sub_id, summary, model_used)
         except Exception as e:
             print(f"    [FAIL] Summarization error: {type(e).__name__}: {e}")
             db.update_error(sub_id, "summarize", str(e))
@@ -118,6 +216,77 @@ def process_lecture(
     elapsed = time.time() - t_start
     print(f"    [Time] Done at {time.strftime('%H:%M:%S')}: {sub_title} (total {elapsed:.0f}s)")
     return summary
+
+
+def _resummarize_old_lectures(
+    client: ICourseClient,
+    db: Database,
+    summarizer: Summarizer,
+    email_items: list,
+):
+    """Upgrade pre-v2 summaries to PPT-aware v2 format (flat-mode prompt).
+
+    Old lectures (summary_format_version=0) keep their original transcript
+    but never had PPT OCR. We:
+      1. Fetch + OCR PPT pages on demand.
+      2. Re-assemble in flat mode (no segment timestamps available).
+      3. Re-summarize, save as v2, reset emailed_at so the user gets the
+         updated summary on the next email send.
+
+    Each upgraded lecture is appended to email_items with is_update=True so
+    Emailer adds the （含 PPT 识别·更新）subject suffix and a 更新 badge.
+    """
+    targets = db.get_lectures_to_resummarize()
+    if not targets:
+        return
+    print(f"\n[Resummarize] {len(targets)} lecture(s) eligible for v2 upgrade.")
+
+    seen_sub_ids = {item["sub_id"] for item in email_items}
+    for row in targets:
+        sub_id = str(row["sub_id"])
+        course_id = row["course_id"]
+        sub_title = row.get("sub_title", sub_id)
+        course_title = row.get("course_title", "Unknown")
+        date = row.get("date", "")
+        try:
+            print(f"  -- Resummarize: {course_title} / {sub_title}")
+            client = _check_session(client)
+            try:
+                _fetch_and_ocr_ppts(client, db, course_id, sub_id)
+            except Exception as e:
+                print(f"    [WARN] PPT OCR phase failed: {type(e).__name__}: {e}")
+
+            transcript = row.get("transcript") or ""
+            if not transcript.strip():
+                print(f"    Empty transcript, cannot resummarize.")
+                continue
+
+            kept_pages = _build_filtered_pages(db, sub_id)
+            prompt_text, mode = bucketer.assemble(transcript, None, kept_pages)
+            print(
+                f"    Prompt: mode={mode}, {len(prompt_text)} chars,"
+                f" {len(kept_pages)} kept PPT page(s)"
+            )
+
+            summary, model_used = summarizer.summarize(course_title, prompt_text)
+            db.update_summary_v2(sub_id, summary, model_used)
+            db.reset_emailed(sub_id)
+            print(f"    [OK] v2 summary by {model_used}: {len(summary)} chars")
+
+            if sub_id in seen_sub_ids:
+                continue
+            email_items.append({
+                "sub_id": sub_id,
+                "course_title": course_title,
+                "sub_title": sub_title,
+                "date": date,
+                "summary": summary,
+                "is_update": True,
+            })
+            seen_sub_ids.add(sub_id)
+        except Exception:
+            print(f"    [FAIL] Resummarize {sub_id}:")
+            traceback.print_exc()
 
 
 def login_with_retry(max_attempts: int = 5) -> WebVPNSession:
@@ -249,6 +418,15 @@ def run():
         except Exception:
             print(f"  ERROR processing course {course_id}:")
             traceback.print_exc()
+
+    # Upgrade pre-v2 (no PPT OCR) summaries before the email step so the user
+    # sees the new content in the same digest.
+    try:
+        client = _check_session(client)
+        _resummarize_old_lectures(client, db, summarizer, email_items)
+    except Exception:
+        print("[Resummarize] phase errored:")
+        traceback.print_exc()
 
     # Recover any previously processed-but-unsent lectures
     unsent = db.get_unsent_lectures()

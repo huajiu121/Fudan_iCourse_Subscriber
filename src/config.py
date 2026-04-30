@@ -90,10 +90,11 @@ DATA_DIR = os.environ.get("DATA_DIR", "data")
 VIDEO_DIR = os.path.join(DATA_DIR, "videos")
 DB_PATH = os.environ.get("DB_PATH", os.path.join(DATA_DIR, "icourse.db"))
 
-# SenseVoice STT (sherpa-onnx)
+# Sherpa-onnx ASR model. Default: FireRed ASR2 CTC (zh+en, int8).
+# Variable name kept for backward compatibility with existing env overrides.
 SENSEVOICE_MODEL_DIR = os.environ.get(
     "SENSEVOICE_MODEL_DIR",
-    "sherpa-onnx-sense-voice-zh-en-ja-ko-yue-2024-07-17",
+    "sherpa-onnx-fire-red-asr2-ctc-zh_en-int8-2026-02-25",
 )
 SILERO_VAD_PATH = os.environ.get("SILERO_VAD_PATH", "silero_vad.onnx")
 

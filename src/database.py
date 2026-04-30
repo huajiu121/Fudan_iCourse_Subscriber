@@ -49,9 +49,32 @@ class Database:
                 ("error_count", "INTEGER DEFAULT 0"),
                 ("error_stage", "TEXT"),
                 ("summary_model", "TEXT"),
+                ("summary_format_version", "INTEGER DEFAULT 0"),
             ]:
                 if col not in existing:
                     self.conn.execute(f"ALTER TABLE lectures ADD COLUMN {col} {typedef}")
+
+            # Per-page OCR results (child table for resumability + concurrency).
+            # ocr_status: 'pending' | 'done' | 'failed'
+            # text is NULL until OCR completes; filtered pages stay 'done' but
+            # the in-memory dedup/desktop filter excludes them at prompt-build time.
+            self.conn.execute("""
+                CREATE TABLE IF NOT EXISTS ppt_pages (
+                    sub_id TEXT NOT NULL,
+                    page_num INTEGER NOT NULL,
+                    created_sec INTEGER NOT NULL,
+                    pptimgurl TEXT,
+                    text TEXT,
+                    ocr_status TEXT NOT NULL DEFAULT 'pending',
+                    ocr_at TEXT,
+                    PRIMARY KEY (sub_id, page_num),
+                    FOREIGN KEY (sub_id) REFERENCES lectures(sub_id)
+                )
+            """)
+            self.conn.execute(
+                "CREATE INDEX IF NOT EXISTS idx_ppt_pages_sub_status "
+                "ON ppt_pages(sub_id, ocr_status)"
+            )
 
     def upsert_course(self, course_id: str, title: str, teacher: str):
         with self.conn:
@@ -162,6 +185,109 @@ class Database:
                 "UPDATE lectures SET summary = ?, summary_model = ? WHERE sub_id = ?",
                 (summary, model, sub_id),
             )
+
+    def update_ppt_page(self, sub_id: str, page_num: int,
+                        text: str | None, status: str):
+        """Mark a page's OCR result. status: 'done' | 'failed'."""
+        with self.conn:
+            self.conn.execute(
+                """UPDATE ppt_pages
+                   SET text = ?, ocr_status = ?, ocr_at = ?
+                   WHERE sub_id = ? AND page_num = ?""",
+                (text, status, datetime.now().isoformat(), sub_id, page_num),
+            )
+
+    def insert_ppt_pages_pending(self, sub_id: str, items: list[dict]) -> int:
+        """Bulk-insert PPT page rows with status='pending'.
+
+        items: list of {page_num, created_sec, pptimgurl}.
+        Existing rows are left untouched (INSERT OR IGNORE), so this is safe
+        to call repeatedly across reruns and across concurrent workers.
+        Returns number of newly inserted rows.
+        """
+        if not items:
+            return 0
+        with self.conn:
+            cur = self.conn.executemany(
+                """INSERT OR IGNORE INTO ppt_pages
+                       (sub_id, page_num, created_sec, pptimgurl, ocr_status)
+                   VALUES (?, ?, ?, ?, 'pending')""",
+                [
+                    (sub_id, int(it["page_num"]), int(it["created_sec"]),
+                     it.get("pptimgurl"))
+                    for it in items
+                ],
+            )
+            return cur.rowcount or 0
+
+    def get_pending_ppt_pages(self, sub_id: str) -> list[dict]:
+        """Pages still awaiting OCR. Workers claim via update_ppt_page."""
+        rows = self.conn.execute(
+            """SELECT page_num, created_sec, pptimgurl
+               FROM ppt_pages
+               WHERE sub_id = ? AND ocr_status = 'pending'
+               ORDER BY created_sec""",
+            (sub_id,),
+        ).fetchall()
+        return [dict(r) for r in rows]
+
+    def get_done_ppt_pages(self, sub_id: str) -> list[dict]:
+        """Successfully-OCR'd pages, sorted by time. Used by the bucketer."""
+        rows = self.conn.execute(
+            """SELECT page_num, created_sec, text
+               FROM ppt_pages
+               WHERE sub_id = ? AND ocr_status = 'done'
+                 AND text IS NOT NULL AND text != ''
+               ORDER BY created_sec""",
+            (sub_id,),
+        ).fetchall()
+        return [dict(r) for r in rows]
+
+    def count_pending_ppt_pages(self, sub_id: str) -> int:
+        return self.conn.execute(
+            "SELECT COUNT(*) FROM ppt_pages "
+            "WHERE sub_id = ? AND ocr_status = 'pending'",
+            (sub_id,),
+        ).fetchone()[0]
+
+    def count_total_ppt_pages(self, sub_id: str) -> int:
+        return self.conn.execute(
+            "SELECT COUNT(*) FROM ppt_pages WHERE sub_id = ?",
+            (sub_id,),
+        ).fetchone()[0]
+
+    def update_summary_v2(self, sub_id: str, summary: str, model: str):
+        """Save summary, model, AND mark format version = 1 (PPT-aware)."""
+        with self.conn:
+            self.conn.execute(
+                """UPDATE lectures
+                   SET summary = ?, summary_model = ?, summary_format_version = 1
+                   WHERE sub_id = ?""",
+                (summary, model, sub_id),
+            )
+
+    def reset_emailed(self, sub_id: str):
+        """Clear emailed_at so a re-summarized lecture re-sends on next run."""
+        with self.conn:
+            self.conn.execute(
+                "UPDATE lectures SET emailed_at = NULL WHERE sub_id = ?",
+                (sub_id,),
+            )
+
+    def get_lectures_to_resummarize(self) -> list[dict]:
+        """Old lectures with summary but missing v2 PPT-aware format.
+
+        Triggers re-OCR + re-summarize (flat mode, since old transcripts
+        have no in-memory segment timestamps).
+        """
+        rows = self.conn.execute(
+            """SELECT l.*, c.title AS course_title, c.teacher
+               FROM lectures l
+               JOIN courses c ON l.course_id = c.course_id
+               WHERE l.summary IS NOT NULL
+                 AND COALESCE(l.summary_format_version, 0) = 0"""
+        ).fetchall()
+        return [dict(row) for row in rows]
 
     def get_lecture(self, sub_id: str) -> dict | None:
         """Get a single lecture row by sub_id."""

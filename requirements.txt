@@ -6,3 +6,5 @@ openai
 pillow
 markdown
 pygments
+rapidocr-onnxruntime
+imagehash

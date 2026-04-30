@@ -292,12 +292,19 @@ class Emailer:
         Args:
             items: List of dicts, each with keys:
                    course_title, sub_title, date, summary
+                   Optional key:
+                   is_update — bool, True for re-summarized lectures (v2
+                               PPT-aware format replacing an older v1 summary).
+                               Adds an "（含 PPT 识别·更新）" subject suffix and
+                               an inline 更新 badge per affected lecture.
 
         Returns:
             True if email was sent successfully, False otherwise.
         """
         if not items:
             return True
+
+        any_update = any(item.get("is_update") for item in items)
 
         # Group by course (preserve insertion order)
         courses: OrderedDict[str, list[dict]] = OrderedDict()
@@ -307,6 +314,8 @@ class Emailer:
         # Subject
         parts = [f"{ct} ({len(lecs)})" for ct, lecs in courses.items()]
         subject = f"[FiCS] {', '.join(parts)}"
+        if any_update:
+            subject += "（含 PPT 识别·更新）"
 
         # Plain text (Markdown as-is, readable without rendering)
         plain_sections = []
@@ -315,8 +324,9 @@ class Emailer:
             plain_sections.append(f"课程：{course_title}")
             plain_sections.append(f"{'=' * 40}")
             for lec in lectures:
+                tag = "[更新] " if lec.get("is_update") else ""
                 plain_sections.append(
-                    f"\n--- {lec['sub_title']} ({lec['date']}) ---\n"
+                    f"\n--- {tag}{lec['sub_title']} ({lec['date']}) ---\n"
                 )
                 plain_sections.append(lec["summary"])
         plain = "\n".join(plain_sections)
@@ -345,13 +355,20 @@ class Emailer:
             + "</ol></nav>"
         )
 
+        update_badge = (
+            '<span style="background:#ff9800;color:white;padding:2px 8px;'
+            'border-radius:3px;font-size:12px;margin-right:8px;'
+            'vertical-align:middle;">更新</span>'
+        )
+
         body_parts = [toc_html]
         for course_title, lectures in courses.items():
             anchor = course_anchors[course_title]
             body_parts.append(f'<h2 id="{anchor}">{escape(course_title)}</h2>')
             for lec in lectures:
+                badge = update_badge if lec.get("is_update") else ""
                 body_parts.append(
-                    f"<h3>{escape(lec['sub_title'])} "
+                    f"<h3>{badge}{escape(lec['sub_title'])} "
                     f"<small>({escape(lec['date'])})</small></h3>"
                 )
                 body_parts.append(
