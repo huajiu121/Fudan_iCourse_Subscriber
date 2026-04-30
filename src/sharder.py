@@ -33,42 +33,13 @@ import sqlite3
 import tempfile
 
 from . import crypto_box
+from .schema import SCHEMA_SQL as _SCHEMA_SQL
 
 SHARD_TARGET_BYTES = 10 * 1024 * 1024  # encrypted+gzipped target per shard
 COMPRESSION_RATIO_GUESS = 4  # gzip ratio for transcript+summary text (Chinese)
 INDEX_FILENAME = "icourse-index.enc"
 SHARDS_DIR = "shards"
 INDEX_VERSION = 2
-
-_SCHEMA_SQL = """
-CREATE TABLE IF NOT EXISTS courses (
-    course_id TEXT PRIMARY KEY,
-    title TEXT,
-    teacher TEXT
-);
-CREATE TABLE IF NOT EXISTS lectures (
-    sub_id TEXT PRIMARY KEY,
-    course_id TEXT NOT NULL,
-    sub_title TEXT, date TEXT,
-    transcript TEXT, summary TEXT,
-    processed_at TEXT, emailed_at TEXT,
-    error_msg TEXT, error_count INTEGER DEFAULT 0,
-    error_stage TEXT, summary_model TEXT,
-    summary_format_version INTEGER DEFAULT 0,
-    FOREIGN KEY (course_id) REFERENCES courses(course_id)
-);
-CREATE TABLE IF NOT EXISTS ppt_pages (
-    sub_id TEXT NOT NULL,
-    page_num INTEGER NOT NULL,
-    created_sec INTEGER NOT NULL,
-    pptimgurl TEXT,
-    text TEXT,
-    ocr_status TEXT NOT NULL DEFAULT 'pending',
-    ocr_at TEXT,
-    PRIMARY KEY (sub_id, page_num),
-    FOREIGN KEY (sub_id) REFERENCES lectures(sub_id)
-);
-"""
 
 
 def _course_uncompressed_size(conn: sqlite3.Connection, course_id: str) -> int:

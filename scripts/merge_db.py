@@ -5,55 +5,31 @@ Used at deploy time to safely combine results from concurrent workflow runs.
 For each lecture row, fields only progress forward (null -> non-null).
 """
 
+import os
 import sqlite3
 import sys
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from src.schema import (
+    LECTURES_MIGRATION_COLUMNS,
+    PPT_PAGES_MIGRATION_COLUMNS,
+    SCHEMA_SQL,
+)
 
 
 def _ensure_schema(conn: sqlite3.Connection):
     """Create tables and migration columns if missing in remote DB."""
-    conn.execute("""
-        CREATE TABLE IF NOT EXISTS courses (
-            course_id TEXT PRIMARY KEY, title TEXT, teacher TEXT
-        )
-    """)
-    conn.execute("""
-        CREATE TABLE IF NOT EXISTS lectures (
-            sub_id TEXT PRIMARY KEY,
-            course_id TEXT NOT NULL,
-            sub_title TEXT, date TEXT,
-            transcript TEXT, summary TEXT,
-            processed_at TEXT, emailed_at TEXT,
-            FOREIGN KEY (course_id) REFERENCES courses(course_id)
-        )
-    """)
-    existing = {r[1] for r in conn.execute("PRAGMA table_info(lectures)")}
-    for col, typedef in [
-        ("error_msg", "TEXT"),
-        ("error_count", "INTEGER DEFAULT 0"),
-        ("error_stage", "TEXT"),
-        ("summary_model", "TEXT"),
-        ("summary_format_version", "INTEGER DEFAULT 0"),
-    ]:
-        if col not in existing:
+    conn.executescript(SCHEMA_SQL)
+    existing_lectures = {r[1] for r in conn.execute("PRAGMA table_info(lectures)")}
+    for col, typedef in LECTURES_MIGRATION_COLUMNS:
+        if col not in existing_lectures:
             conn.execute(f"ALTER TABLE lectures ADD COLUMN {col} {typedef}")
 
-    conn.execute("""
-        CREATE TABLE IF NOT EXISTS ppt_pages (
-            sub_id TEXT NOT NULL,
-            page_num INTEGER NOT NULL,
-            created_sec INTEGER NOT NULL,
-            pptimgurl TEXT,
-            text TEXT,
-            ocr_status TEXT NOT NULL DEFAULT 'pending',
-            ocr_at TEXT,
-            PRIMARY KEY (sub_id, page_num),
-            FOREIGN KEY (sub_id) REFERENCES lectures(sub_id)
-        )
-    """)
-    conn.execute(
-        "CREATE INDEX IF NOT EXISTS idx_ppt_pages_sub_status "
-        "ON ppt_pages(sub_id, ocr_status)"
-    )
+    existing_ppt = {r[1] for r in conn.execute("PRAGMA table_info(ppt_pages)")}
+    for col, typedef in PPT_PAGES_MIGRATION_COLUMNS:
+        if col not in existing_ppt:
+            conn.execute(f"ALTER TABLE ppt_pages ADD COLUMN {col} {typedef}")
 
 
 def merge(local_path: str, remote_path: str):

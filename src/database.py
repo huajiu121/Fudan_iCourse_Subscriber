@@ -5,6 +5,11 @@ import sqlite3
 from datetime import datetime
 
 from . import config
+from .schema import (
+    LECTURES_MIGRATION_COLUMNS,
+    PPT_PAGES_MIGRATION_COLUMNS,
+    SCHEMA_SQL,
+)
 
 
 class Database:
@@ -19,62 +24,29 @@ class Database:
 
     def _init_tables(self):
         with self.conn:
-            self.conn.execute("""
-                CREATE TABLE IF NOT EXISTS courses (
-                    course_id TEXT PRIMARY KEY,
-                    title TEXT,
-                    teacher TEXT
-                )
-            """)
-            self.conn.execute("""
-                CREATE TABLE IF NOT EXISTS lectures (
-                    sub_id TEXT PRIMARY KEY,
-                    course_id TEXT NOT NULL,
-                    sub_title TEXT,
-                    date TEXT,
-                    transcript TEXT,
-                    summary TEXT,
-                    processed_at TEXT,
-                    emailed_at TEXT,
-                    FOREIGN KEY (course_id) REFERENCES courses(course_id)
-                )
-            """)
-            # Migrate: add error tracking and summary_model columns
-            existing = {
+            self.conn.executescript(SCHEMA_SQL)
+
+            existing_lectures = {
                 row[1]
                 for row in self.conn.execute("PRAGMA table_info(lectures)").fetchall()
             }
-            for col, typedef in [
-                ("error_msg", "TEXT"),
-                ("error_count", "INTEGER DEFAULT 0"),
-                ("error_stage", "TEXT"),
-                ("summary_model", "TEXT"),
-                ("summary_format_version", "INTEGER DEFAULT 0"),
-            ]:
-                if col not in existing:
-                    self.conn.execute(f"ALTER TABLE lectures ADD COLUMN {col} {typedef}")
+            for col, typedef in LECTURES_MIGRATION_COLUMNS:
+                if col not in existing_lectures:
+                    self.conn.execute(
+                        f"ALTER TABLE lectures ADD COLUMN {col} {typedef}"
+                    )
 
-            # Per-page OCR results (child table for resumability + concurrency).
-            # ocr_status: 'pending' | 'done' | 'failed'
-            # text is NULL until OCR completes; filtered pages stay 'done' but
-            # the in-memory dedup/desktop filter excludes them at prompt-build time.
-            self.conn.execute("""
-                CREATE TABLE IF NOT EXISTS ppt_pages (
-                    sub_id TEXT NOT NULL,
-                    page_num INTEGER NOT NULL,
-                    created_sec INTEGER NOT NULL,
-                    pptimgurl TEXT,
-                    text TEXT,
-                    ocr_status TEXT NOT NULL DEFAULT 'pending',
-                    ocr_at TEXT,
-                    PRIMARY KEY (sub_id, page_num),
-                    FOREIGN KEY (sub_id) REFERENCES lectures(sub_id)
-                )
-            """)
-            self.conn.execute(
-                "CREATE INDEX IF NOT EXISTS idx_ppt_pages_sub_status "
-                "ON ppt_pages(sub_id, ocr_status)"
-            )
+            existing_ppt = {
+                row[1]
+                for row in self.conn.execute(
+                    "PRAGMA table_info(ppt_pages)"
+                ).fetchall()
+            }
+            for col, typedef in PPT_PAGES_MIGRATION_COLUMNS:
+                if col not in existing_ppt:
+                    self.conn.execute(
+                        f"ALTER TABLE ppt_pages ADD COLUMN {col} {typedef}"
+                    )
 
     def upsert_course(self, course_id: str, title: str, teacher: str):
         with self.conn:

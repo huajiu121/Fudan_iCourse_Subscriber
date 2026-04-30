@@ -15,33 +15,15 @@ const _SQL_CDN = "https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.12.0";
 let _db = null;
 let _SQL = null;
 
-const _SCHEMA = `
-CREATE TABLE IF NOT EXISTS courses (
-    course_id TEXT PRIMARY KEY,
-    title TEXT,
-    teacher TEXT
-);
-CREATE TABLE IF NOT EXISTS lectures (
-    sub_id TEXT PRIMARY KEY,
-    course_id TEXT NOT NULL,
-    sub_title TEXT, date TEXT,
-    transcript TEXT, summary TEXT,
-    processed_at TEXT, emailed_at TEXT,
-    error_msg TEXT, error_count INTEGER DEFAULT 0,
-    error_stage TEXT, summary_model TEXT,
-    summary_format_version INTEGER DEFAULT 0
-);
-CREATE TABLE IF NOT EXISTS ppt_pages (
-    sub_id TEXT NOT NULL,
-    page_num INTEGER NOT NULL,
-    created_sec INTEGER NOT NULL,
-    pptimgurl TEXT,
-    text TEXT,
-    ocr_status TEXT NOT NULL DEFAULT 'pending',
-    ocr_at TEXT,
-    PRIMARY KEY (sub_id, page_num)
-);
-`;
+function _schemaSql() {
+  // schema.js loads before this file via index.html and registers the SQL
+  // on window.ICS.schema so backend (src/schema.py) and frontend share one
+  // source of truth.  Throw early if it's missing — silent NULL would
+  // produce "no such table" later, which is a worse failure mode.
+  var s = window.ICS && window.ICS.schema && window.ICS.schema.SCHEMA_SQL;
+  if (!s) throw new Error("ICS.schema.SCHEMA_SQL missing — load js/schema.js first");
+  return s;
+}
 
 async function _ensureSqlJs() {
   if (_SQL) return _SQL;
@@ -56,13 +38,13 @@ async function _initFromBytes(dbBytes) {
   // Kept so older deployments (pre-shard data branch) still load.
   const SQL = await _ensureSqlJs();
   _db = dbBytes ? new SQL.Database(dbBytes) : new SQL.Database();
-  if (!dbBytes) _db.exec(_SCHEMA);
+  if (!dbBytes) _db.exec(_schemaSql());
 }
 
 async function _initEmpty() {
   const SQL = await _ensureSqlJs();
   _db = new SQL.Database();
-  _db.exec(_SCHEMA);
+  _db.exec(_schemaSql());
 }
 
 function _copyRows(src, dst, table) {

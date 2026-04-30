@@ -1,0 +1,63 @@
+"""Single source of truth for the SQLite schema.
+
+This module is imported by every Python component that creates or migrates
+the database (Database, sharder, merge_db) so the column list lives in
+exactly one place.
+
+frontend/js/schema.js is a **manual mirror** of these constants.  When you
+change SCHEMA_SQL, LECTURES_MIGRATION_COLUMNS, or PPT_PAGES_MIGRATION_COLUMNS
+here, update that file too — there is no automated sync.  Both run in
+different processes (Python on the CI runner, JS in the browser) and have
+to agree on what tables and columns exist.
+"""
+
+from __future__ import annotations
+
+
+SCHEMA_SQL = """
+CREATE TABLE IF NOT EXISTS courses (
+    course_id TEXT PRIMARY KEY,
+    title TEXT,
+    teacher TEXT
+);
+CREATE TABLE IF NOT EXISTS lectures (
+    sub_id TEXT PRIMARY KEY,
+    course_id TEXT NOT NULL,
+    sub_title TEXT, date TEXT,
+    transcript TEXT, summary TEXT,
+    processed_at TEXT, emailed_at TEXT,
+    error_msg TEXT, error_count INTEGER DEFAULT 0,
+    error_stage TEXT, summary_model TEXT,
+    summary_format_version INTEGER DEFAULT 0,
+    FOREIGN KEY (course_id) REFERENCES courses(course_id)
+);
+CREATE TABLE IF NOT EXISTS ppt_pages (
+    sub_id TEXT NOT NULL,
+    page_num INTEGER NOT NULL,
+    created_sec INTEGER NOT NULL,
+    pptimgurl TEXT,
+    text TEXT,
+    ocr_status TEXT NOT NULL DEFAULT 'pending',
+    ocr_at TEXT,
+    dhash TEXT,
+    PRIMARY KEY (sub_id, page_num),
+    FOREIGN KEY (sub_id) REFERENCES lectures(sub_id)
+);
+CREATE INDEX IF NOT EXISTS idx_ppt_pages_sub_status
+    ON ppt_pages(sub_id, ocr_status);
+"""
+
+# Columns added to ``lectures`` after the v1 schema shipped.  Existing DBs
+# get them via ALTER TABLE in Database._init_tables / merge_db._ensure_schema.
+LECTURES_MIGRATION_COLUMNS: list[tuple[str, str]] = [
+    ("error_msg", "TEXT"),
+    ("error_count", "INTEGER DEFAULT 0"),
+    ("error_stage", "TEXT"),
+    ("summary_model", "TEXT"),
+    ("summary_format_version", "INTEGER DEFAULT 0"),
+]
+
+# Columns added to ``ppt_pages`` after its initial shape shipped.
+PPT_PAGES_MIGRATION_COLUMNS: list[tuple[str, str]] = [
+    ("dhash", "TEXT"),
+]
