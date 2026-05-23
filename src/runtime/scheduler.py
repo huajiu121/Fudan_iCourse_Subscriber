@@ -111,12 +111,24 @@ class ResourceMonitor:
                  audio_downloader: "AudioDownloader",
                  reporter, *,
                  max_target: int = None, min_target: int = None,
-                 cpu_high: int = None, cpu_low: int = None):
+                 cpu_high: int = None, cpu_low: int = None,
+                 max_target_when_asr: int = None):
         self._sem = ocr_sem
         self._image_pool = image_pool
         self._audio_downloader = audio_downloader
         self._reporter = reporter
-        self._max_target = max_target or config.OCR_MAX_TARGET
+        self._max_target_alone = max_target or config.OCR_MAX_TARGET
+        self._max_target_when_asr = (
+            max_target_when_asr or config.OCR_MAX_TARGET_WHEN_ASR_ACTIVE
+        )
+        # ASR-active flag — flipped by Scheduler.set_asr_active() from
+        # LectureRunner around its ASR phase.  When True, OCR can ramp
+        # only up to _max_target_when_asr (≈half the cores) so ASR's
+        # num_threads=4 thread block has space to actually run on the
+        # remaining cores; when False, OCR is free to use all of
+        # _max_target_alone (≈full cores) so resummarize-only and
+        # between-lecture phases aren't artificially throttled.
+        self._asr_active = False
         self._min_target = min_target or config.OCR_MIN_TARGET
         self._cpu_high = cpu_high or config.RESOURCE_MONITOR_CPU_HIGH
         self._cpu_low = cpu_low or config.RESOURCE_MONITOR_CPU_LOW
@@ -124,6 +136,25 @@ class ResourceMonitor:
         self._thread: Optional[threading.Thread] = None
         # Prime psutil — the first call always returns 0.0.
         psutil.cpu_percent(interval=None)
+
+    @property
+    def effective_max_target(self) -> int:
+        """Cap on OCR concurrency given current ASR state."""
+        return (self._max_target_when_asr if self._asr_active
+                else self._max_target_alone)
+
+    def set_asr_active(self, active: bool) -> None:
+        """Flag ASR phase entry/exit.  When flipped True, immediately clamp
+        the current OCR target down to the new max so an in-flight 5-worker
+        OCR run doesn't keep stealing cores from ASR's first second."""
+        prev = self._asr_active
+        self._asr_active = bool(active)
+        if prev != self._asr_active:
+            new_max = self.effective_max_target
+            if self._sem.target > new_max:
+                old = self._sem.target
+                self._sem.set_target(new_max)
+                self._reporter.cpu_target_changed(old, new_max, -1.0)
 
     def start(self):
         if self._thread is not None:
@@ -149,7 +180,7 @@ class ResourceMonitor:
                 cpu_pct=cpu,
                 ocr_busy=self._sem.busy,
                 ocr_target=self._sem.target,
-                ocr_max=self._max_target,
+                ocr_max=self.effective_max_target,
                 image_busy=getattr(self._image_pool, "_work_queue", None) is not None
                             and self._image_pool._work_queue.qsize() or 0,
                 image_max=self._image_pool._max_workers,
@@ -159,7 +190,8 @@ class ResourceMonitor:
 
     def _maybe_retune(self, cpu: float):
         old = self._sem.target
-        if cpu < self._cpu_low and old < self._max_target:
+        cap = self.effective_max_target
+        if cpu < self._cpu_low and old < cap:
             self._sem.set_target(old + 1)
             self._reporter.cpu_target_changed(old, old + 1, cpu)
         elif cpu > self._cpu_high and old > self._min_target:
@@ -508,6 +540,10 @@ class Scheduler:
 
     def start(self):
         self._monitor.start()
+
+    def set_asr_active(self, active: bool) -> None:
+        """Forward to ResourceMonitor so the OCR concurrency cap adapts."""
+        self._monitor.set_asr_active(active)
 
     def prefetch_lecture(self, client, course_id: str, sub_id: str) -> None:
         """Schedule image + audio prefetch for a future lecture."""

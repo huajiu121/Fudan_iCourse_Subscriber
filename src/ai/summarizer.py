@@ -104,10 +104,25 @@ class Summarizer:
         )
         result = response.choices[0].message.content
         elapsed = time.time() - t0
-        print(
-            f"[Summarizer] Done ({model}): {len(content)} chars input"
-            f" → {len(result)} chars output in {elapsed:.0f}s"
-        )
+        # Token usage helps explain run cost — every provider's billing is
+        # token-based, and rate-limit decisions key off prompt size much
+        # more than character count.  Some providers (OpenAI-compatible)
+        # leave usage None on streaming or error paths, so fall back to a
+        # plain "no usage" line so the summary still prints.
+        usage = getattr(response, "usage", None)
+        if usage is not None:
+            print(
+                f"[Summarizer] Done ({model}): "
+                f"{len(content)} chars input → {len(result)} chars output"
+                f" in {elapsed:.0f}s "
+                f"(tokens: prompt={getattr(usage,'prompt_tokens','?')}, "
+                f"completion={getattr(usage,'completion_tokens','?')})"
+            )
+        else:
+            print(
+                f"[Summarizer] Done ({model}): {len(content)} chars input"
+                f" → {len(result)} chars output in {elapsed:.0f}s"
+            )
         return result
 
     def summarize(self, title: str, content: str) -> tuple[str, str]:

@@ -1,0 +1,533 @@
+iCourse Subscriber — starting run
+============================================================
+
+[Login] WebVPN (attempt 1/5)...
+[1/7] Getting authentication context...
+    lck: OK
+[2/7] Querying authentication methods...
+    authChainCode: OK
+[3/7] Getting RSA public key...
+    Got RSA public key
+[4/7] Encrypting password...
+[5/7] Executing authentication...
+    loginToken: OK
+[6/7] Getting CAS ticket...
+    Ticket extracted.
+[7/7] Establishing WebVPN session...
+    Session established.
+[*] WebVPN login successful!
+[Login] iCourse CAS...
+[*] Starting iCourse CAS authentication through WebVPN...
+[1/7] Initiating CAS login via casapi...
+    lck: OK
+[2/7] Querying auth methods (via WebVPN)...
+    authChainCode: OK
+[3/7] Getting RSA public key (via WebVPN)...
+    Got RSA public key
+[4/7] Encrypting password...
+[5/7] Executing authentication (via WebVPN)...
+    loginToken: OK
+[6/7] Getting CAS ticket (via WebVPN)...
+    Ticket extracted.
+[7/7] Following ticket to iCourse (via WebVPN)...
+    Status: 200
+    Verified: login OK
+[*] iCourse authentication successful!
+
+──────────────────────────────────────────────────
+[Course] 35846
+  Title: 人工智能 (Teacher: 陈智能)
+  Total lectures: 16 (11 with playback)
+  New/retry lectures: 1
+
+  -- Processing: 2026-05-22第6-8节 (2026-5-4)
+    [Time] Start: 2026-05-22 13:58:06
+    [Time] Fetching video URL at 13:58:06
+    Failed to get sub info for 616503: RuntimeError
+    No video URL for 616503, skipping.
+
+──────────────────────────────────────────────────
+[Course] 35652
+  Title: 数据库设计 (Teacher: 何震瀛)
+  Total lectures: 18 (12 with playback)
+  New/retry lectures: 1
+
+  -- Processing: 2026-05-21第6-8节 (2026-5-4)
+    [Time] Start: 2026-05-22 13:58:07
+    [Time] Fetching video URL at 13:58:07
+    [Time] Streaming audio at 13:58:09
+    [URL] https://webvpn.fudan.edu.cn/https/77726476706e69737468656265737421f9f44e8935236d1e781d8dad961b2631a5...
+[Transcriber] Loading SenseVoice model...
+[Transcriber] Model loaded.
+[Transcriber] Starting at 13:58:10
+[Transcriber] Progress: 1234s audio, 75.3 MB received, 1282.9 KB/s, 253 segments so far
+[Transcriber] Progress: 2787s audio, 170.1 MB received, 1449.8 KB/s, 666 segments so far
+[Transcriber] Progress: 4747s audio, 289.7 MB received, 1646.1 KB/s, 1071 segments so far
+[Transcriber] Progress: 6587s audio, 402.0 MB received, 1713.7 KB/s, 1507 segments so far
+[Transcriber] Progress: 8355s audio, 509.9 MB received, 1738.7 KB/s, 1921 segments so far
+[Transcriber] Progress: 9979s audio, 609.1 MB received, 1730.0 KB/s, 2347 segments so far
+[Transcriber] Media duration: 10083s (168.1min), received: 10083s (168.1min)
+[Transcriber] Done at 14:04:15: 10083s audio, 615.4 MB, avg 1725.0 KB/s, 36321 chars, 2357 segments in 365s
+    [Time] Generating summary at 14:04:15
+    Transcript length: 36321 chars
+[Summarizer] gemini/gemini-2.5-flash failed: InternalServerError: Error code: 503 - [{'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}]
+[Summarizer] Done (gemini-3-flash-preview): 36321 chars input → 3160 chars output in 24s
+    [OK] Summary by gemini/gemini-3-flash-preview: 3160 chars
+    [Time] Done at 14:04:51: 2026-05-21第6-8节 (total 403s)
+
+──────────────────────────────────────────────────
+[Course] 34646
+  Title: 大数据平台技术 (Teacher: 王鹏)
+  Total lectures: 16 (11 with playback)
+  New/retry lectures: 0
+  No new lectures, skipping.
+
+──────────────────────────────────────────────────
+[Course] 34166
+  Title: 学术英语（社会科学） (Teacher: 张颖)
+  Total lectures: 15 (12 with playback)
+  New/retry lectures: 0
+  No new lectures, skipping.
+
+──────────────────────────────────────────────────
+[Course] 33974
+  Title: 机器学习系统 (Teacher: 尚笠)
+  Total lectures: 16 (12 with playback)
+  New/retry lectures: 0
+  No new lectures, skipping.
+
+──────────────────────────────────────────────────
+[Course] 35125
+  Title: 马克思主义基本原理 (Teacher: 谌中和)
+  Total lectures: 17 (12 with playback)
+  New/retry lectures: 1
+
+  -- Processing: 2026-05-21第11-13节 (2026-5-4)
+    [Time] Start: 2026-05-22 14:05:01
+    [Time] Fetching video URL at 14:05:01
+    [Time] Streaming audio at 14:05:02
+    [URL] https://webvpn.fudan.edu.cn/https/77726476706e69737468656265737421f9f44e8935236d1e781d8dad961b2631a5...
+[Transcriber] Starting at 14:05:02
+[Transcriber] Progress: 1046s audio, 63.8 MB received, 1085.8 KB/s, 255 segments so far
+[Transcriber] Progress: 1996s audio, 121.8 MB received, 1037.3 KB/s, 559 segments so far
+[Transcriber] Progress: 2703s audio, 165.0 MB received, 937.1 KB/s, 789 segments so far
+[Transcriber] Progress: 4086s audio, 249.4 MB received, 1062.8 KB/s, 1105 segments so far
+[Transcriber] Progress: 5130s audio, 313.1 MB received, 1067.5 KB/s, 1453 segments so far
+[Transcriber] Progress: 6032s audio, 368.2 MB received, 1045.8 KB/s, 1691 segments so far
+[Transcriber] Progress: 7179s audio, 438.2 MB received, 1065.4 KB/s, 1790 segments so far
+[Transcriber] Progress: 8442s audio, 515.3 MB received, 1096.6 KB/s, 1997 segments so far
+[Transcriber] Media duration: 9841s (164.0min), received: 9841s (164.0min)
+[Transcriber] Done at 14:13:49: 9841s audio, 600.6 MB, avg 1167.9 KB/s, 30123 chars, 2016 segments in 527s
+    [Time] Generating summary at 14:13:49
+    Transcript length: 30123 chars
+[Summarizer] gemini/gemini-2.5-flash failed: InternalServerError: Error code: 503 - [{'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}]
+[Summarizer] Done (gemini-3-flash-preview): 30123 chars input → 2722 chars output in 35s
+    [OK] Summary by gemini/gemini-3-flash-preview: 2722 chars
+    [Time] Done at 14:15:20: 2026-05-21第11-13节 (total 619s)
+
+──────────────────────────────────────────────────
+[Course] 32913
+  Title: 计算机组成与体系结构 (Teacher: 张为华)
+  Total lectures: 64 (27 with playback)
+  [Dedup] Skipping duplicate: 2026-03-02第11-12节 (sub_id=561404)
+  [Dedup] Skipping duplicate: 2026-03-02第11-12节 (sub_id=561405)
+  [Dedup] Skipping duplicate: 2026-03-09第11-12节 (sub_id=566341)
+  [Dedup] Skipping duplicate: 2026-03-09第11-12节 (sub_id=566342)
+  [Dedup] Skipping duplicate: 2026-03-16第11-12节 (sub_id=571305)
+  [Dedup] Skipping duplicate: 2026-03-16第11-12节 (sub_id=571306)
+  [Dedup] Skipping duplicate: 2026-03-23第11-12节 (sub_id=575761)
+  [Dedup] Skipping duplicate: 2026-03-23第11-12节 (sub_id=575762)
+  [Dedup] Skipping duplicate: 2026-03-30第11-12节 (sub_id=580677)
+  [Dedup] Skipping duplicate: 2026-03-30第11-12节 (sub_id=580678)
+  [Dedup] Skipping duplicate: 2026-04-06第11-12节 (sub_id=585020)
+  [Dedup] Skipping duplicate: 2026-04-06第11-12节 (sub_id=585021)
+  [Dedup] Skipping duplicate: 2026-04-13第11-12节 (sub_id=589535)
+  [Dedup] Skipping duplicate: 2026-04-13第11-12节 (sub_id=589536)
+  [Dedup] Skipping duplicate: 2026-04-20第11-12节 (sub_id=595168)
+  [Dedup] Skipping duplicate: 2026-04-20第11-12节 (sub_id=595169)
+  [Dedup] Skipping duplicate: 2026-04-27第11-12节 (sub_id=599495)
+  [Dedup] Skipping duplicate: 2026-04-27第11-12节 (sub_id=599496)
+  [Dedup] Skipping duplicate: 2026-05-04第11-12节 (sub_id=603759)
+  [Dedup] Skipping duplicate: 2026-05-04第11-12节 (sub_id=603760)
+  [Dedup] Skipping duplicate: 2026-05-11第11-12节 (sub_id=608029)
+  [Dedup] Skipping duplicate: 2026-05-11第11-12节 (sub_id=608030)
+  [Dedup] Skipping duplicate: 2026-05-18第11-12节 (sub_id=612389)
+  [Dedup] Skipping duplicate: 2026-05-18第11-12节 (sub_id=612390)
+  [Dedup] Skipping duplicate: 2026-05-25第11-12节 (sub_id=617207)
+  [Dedup] Skipping duplicate: 2026-05-25第11-12节 (sub_id=617208)
+  [Dedup] Skipping duplicate: 2026-06-01第11-12节 (sub_id=621417)
+  [Dedup] Skipping duplicate: 2026-06-01第11-12节 (sub_id=621418)
+  [Dedup] Skipping duplicate: 2026-06-08第11-12节 (sub_id=625669)
+  [Dedup] Skipping duplicate: 2026-06-08第11-12节 (sub_id=625670)
+  [Dedup] Skipping duplicate: 2026-06-15第11-12节 (sub_id=630572)
+  [Dedup] Skipping duplicate: 2026-06-15第11-12节 (sub_id=630573)
+  New/retry lectures: 0
+  No new lectures, skipping.
+
+──────────────────────────────────────────────────
+[Course] 34964
+  Title: 多智能体系统及应用 (Teacher: 欧阳春)
+  Total lectures: 18 (11 with playback)
+  New/retry lectures: 0
+  No new lectures, skipping.
+
+──────────────────────────────────────────────────
+[Course] 33824
+  Title: 面向对象程序设计 (Teacher: 张天戈)
+  Total lectures: 48 (36 with playback)
+  [Dedup] Skipping duplicate: 2026-03-04第11-12节 (sub_id=563537)
+  [Dedup] Skipping duplicate: 2026-03-11第11-12节 (sub_id=568492)
+  [Dedup] Skipping duplicate: 2026-03-18第11-12节 (sub_id=573344)
+  [Dedup] Skipping duplicate: 2026-03-25第11-12节 (sub_id=577935)
+  [Dedup] Skipping duplicate: 2026-04-01第11-12节 (sub_id=582383)
+  [Dedup] Skipping duplicate: 2026-04-08第11-12节 (sub_id=586820)
+  [Dedup] Skipping duplicate: 2026-04-15第11-12节 (sub_id=591231)
+  [Dedup] Skipping duplicate: 2026-04-22第11-12节 (sub_id=596906)
+  [Dedup] Skipping duplicate: 2026-04-29第11-12节 (sub_id=601251)
+  [Dedup] Skipping duplicate: 2026-05-06第11-12节 (sub_id=605456)
+  [Dedup] Skipping duplicate: 2026-05-13第11-12节 (sub_id=609768)
+  [Dedup] Skipping duplicate: 2026-05-20第11-12节 (sub_id=613972)
+  [Dedup] Skipping duplicate: 2026-05-27第11-12节 (sub_id=618840)
+  [Dedup] Skipping duplicate: 2026-06-03第11-12节 (sub_id=623204)
+  [Dedup] Skipping duplicate: 2026-06-10第11-12节 (sub_id=627168)
+  [Dedup] Skipping duplicate: 2026-06-17第11-12节 (sub_id=632001)
+  New/retry lectures: 0
+  No new lectures, skipping.
+
+──────────────────────────────────────────────────
+[Course] 32890
+  Title: 软件工程 (Teacher: 沈立炜)
+  Total lectures: 32 (23 with playback)
+  New/retry lectures: 0
+  No new lectures, skipping.
+
+──────────────────────────────────────────────────
+[Course] 33299
+  Title: 科技人类学 (Teacher: 朱剑峰)
+  Total lectures: 16 (10 with playback)
+  New/retry lectures: 0
+  No new lectures, skipping.
+
+──────────────────────────────────────────────────
+[Course] 33951
+  Title: 政策系统动力学 (Teacher: 赵德余)
+  Total lectures: 16 (12 with playback)
+  New/retry lectures: 0
+  No new lectures, skipping.
+
+──────────────────────────────────────────────────
+[Course] 34005
+  Title: 社会分层与流动 (Teacher: 李煜)
+  Total lectures: 16 (12 with playback)
+  New/retry lectures: 0
+  No new lectures, skipping.
+
+──────────────────────────────────────────────────
+[Course] 34044
+  Title: 理解当代中国社会 (Teacher: 吴菲)
+  Total lectures: 16 (12 with playback)
+  New/retry lectures: 0
+  No new lectures, skipping.
+
+──────────────────────────────────────────────────
+[Course] 34825
+  Title: 社会资本与关系研究 (Teacher: 田丰)
+  Total lectures: 12 (12 with playback)
+  New/retry lectures: 0
+  No new lectures, skipping.
+
+──────────────────────────────────────────────────
+[Course] 34946
+  Title: 家庭社会学 (Teacher: 杜世超)
+  Total lectures: 17 (11 with playback)
+  New/retry lectures: 0
+  No new lectures, skipping.
+
+──────────────────────────────────────────────────
+[Course] 34260
+  Title: 知识论（H） (Teacher: 王聚)
+  Total lectures: 32 (24 with playback)
+  New/retry lectures: 0
+  No new lectures, skipping.
+
+──────────────────────────────────────────────────
+[Course] 32829
+  Title: 政治哲学 (Teacher: 鲁绍臣)
+  Total lectures: 16 (10 with playback)
+  New/retry lectures: 0
+  No new lectures, skipping.
+
+──────────────────────────────────────────────────
+[Course] 35892
+  Title: 技术哲学 (Teacher: 徐志宏)
+  Total lectures: 16 (11 with playback)
+  New/retry lectures: 1
+
+  -- Processing: 2026-05-22第4-5节 (2026-5-4)
+    [Time] Start: 2026-05-22 14:15:36
+    [Time] Fetching video URL at 14:15:36
+    Failed to get sub info for 616158: RuntimeError
+    No video URL for 616158, skipping.
+
+──────────────────────────────────────────────────
+[Course] 32833
+  Title: 当代社会学理论 (Teacher: 梅笑)
+  Total lectures: 16 (10 with playback)
+  New/retry lectures: 0
+  No new lectures, skipping.
+
+──────────────────────────────────────────────────
+[Course] 36144
+  Title: 教育社会学 (Teacher: 马莹)
+  Total lectures: 16 (11 with playback)
+  New/retry lectures: 1
+
+  -- Processing: 2026-05-22第6-7节 (2026-5-4)
+    [Time] Start: 2026-05-22 14:15:42
+    [Time] Fetching video URL at 14:15:42
+    Failed to get sub info for 616441: RuntimeError
+    No video URL for 616441, skipping.
+
+──────────────────────────────────────────────────
+[Course] 35920
+  Title: 社会科学数据挖掘 (Teacher: 周阳)
+  Total lectures: 14 (9 with playback)
+  New/retry lectures: 1
+
+  -- Processing: 2026-05-22第6-8节 (2026-5-4)
+    [Time] Start: 2026-05-22 14:15:44
+    [Time] Fetching video URL at 14:15:44
+    Failed to get sub info for 616243: RuntimeError
+    No video URL for 616243, skipping.
+
+──────────────────────────────────────────────────
+[Course] 35383
+  Title: 劳动经济学 (Teacher: 程远)
+  Total lectures: 18 (12 with playback)
+  New/retry lectures: 1
+
+  -- Processing: 2026-05-21第6-8节 (2026-5-4)
+    [Time] Start: 2026-05-22 14:15:46
+    [Time] Fetching video URL at 14:15:46
+    [Time] Streaming audio at 14:15:47
+    [URL] https://webvpn.fudan.edu.cn/https/77726476706e69737468656265737421f9f44e8935236d1e781d8dad961b2631a5...
+[Transcriber] Starting at 14:15:47
+[Transcriber] Media duration: 10062s (167.7min), received: 42s (0.7min)
+[Transcriber] Done at 14:16:14: 42s audio, 2.5 MB, avg 97.0 KB/s, 48 chars, 3 segments in 27s
+    [WARN] Attempt 1/3: Only received 42s of 10062s audio (0%). Connection may have dropped.
+    Retrying with fresh connection...
+[Transcriber] Starting at 14:16:15
+[Transcriber] Progress: 1052s audio, 64.2 MB received, 1094.5 KB/s, 136 segments so far
+[Transcriber] Progress: 2433s audio, 148.5 MB received, 1265.3 KB/s, 353 segments so far
+[Transcriber] Progress: 3878s audio, 236.7 MB received, 1345.2 KB/s, 536 segments so far
+[Transcriber] Progress: 5432s audio, 331.5 MB received, 1412.6 KB/s, 800 segments so far
+[Transcriber] Progress: 6756s audio, 412.4 MB received, 1403.0 KB/s, 1008 segments so far
+[Transcriber] Progress: 8185s audio, 499.6 MB received, 1414.1 KB/s, 1221 segments so far
+[Transcriber] Media duration: 10062s (167.7min), received: 10062s (167.7min)
+[Transcriber] Done at 14:23:04: 10062s audio, 614.1 MB, avg 1537.2 KB/s, 39982 chars, 1341 segments in 409s
+    [Time] Generating summary at 14:23:04
+    Transcript length: 39982 chars
+[Summarizer] gemini/gemini-2.5-flash failed: InternalServerError: Error code: 503 - [{'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}]
+[Summarizer] Done (gemini-3-flash-preview): 39982 chars input → 3400 chars output in 26s
+    [OK] Summary by gemini/gemini-3-flash-preview: 3400 chars
+    [Time] Done at 14:23:59: 2026-05-21第6-8节 (total 493s)
+
+──────────────────────────────────────────────────
+[Course] 33969
+  Title: 统计分析进阶 (Teacher: 吴菲)
+  Total lectures: 16 (12 with playback)
+  New/retry lectures: 0
+  No new lectures, skipping.
+
+──────────────────────────────────────────────────
+[Course] 33808
+  Title: 发展政治学 (Teacher: 曾庆捷)
+  Total lectures: 16 (12 with playback)
+  New/retry lectures: 0
+  No new lectures, skipping.
+
+──────────────────────────────────────────────────
+[Course] 33720
+  Title: 高级政治经济学 (Teacher: 汪立鑫)
+  Total lectures: 32 (24 with playback)
+  [Dedup] Skipping duplicate: 2026-03-03第3-5节 (sub_id=562377)
+  [Dedup] Skipping duplicate: 2026-03-10第3-5节 (sub_id=567152)
+  [Dedup] Skipping duplicate: 2026-03-17第3-5节 (sub_id=571967)
+  [Dedup] Skipping duplicate: 2026-03-24第3-5节 (sub_id=577285)
+  [Dedup] Skipping duplicate: 2026-03-31第3-5节 (sub_id=581705)
+  [Dedup] Skipping duplicate: 2026-04-07第3-5节 (sub_id=586190)
+  [Dedup] Skipping duplicate: 2026-04-14第3-5节 (sub_id=590647)
+  [Dedup] Skipping duplicate: 2026-04-21第3-5节 (sub_id=595228)
+  [Dedup] Skipping duplicate: 2026-04-28第3-5节 (sub_id=600115)
+  [Dedup] Skipping duplicate: 2026-05-09第3-5节 (sub_id=604395)
+  [Dedup] Skipping duplicate: 2026-05-12第3-5节 (sub_id=608685)
+  [Dedup] Skipping duplicate: 2026-05-19第3-5节 (sub_id=613852)
+  [Dedup] Skipping duplicate: 2026-05-26第3-5节 (sub_id=618207)
+  [Dedup] Skipping duplicate: 2026-06-02第3-5节 (sub_id=622566)
+  [Dedup] Skipping duplicate: 2026-06-09第3-5节 (sub_id=626656)
+  [Dedup] Skipping duplicate: 2026-06-16第3-5节 (sub_id=630630)
+  New/retry lectures: 0
+  No new lectures, skipping.
+
+──────────────────────────────────────────────────
+[Course] 33828
+  Title: 比较政治学前沿理论 (Teacher: 郭定平)
+  Total lectures: 3 (3 with playback)
+  New/retry lectures: 0
+  No new lectures, skipping.
+
+──────────────────────────────────────────────────
+[Course] 36252
+  Title: 政治修辞学 (Teacher: 吴礼权)
+  Total lectures: 16 (11 with playback)
+  New/retry lectures: 1
+
+  -- Processing: 2026-05-22第6-7节 (2026-5-4)
+    [Time] Start: 2026-05-22 14:24:06
+    [Time] Fetching video URL at 14:24:06
+    Failed to get sub info for 616222: RuntimeError
+    No video URL for 616222, skipping.
+
+──────────────────────────────────────────────────
+[Course] 36256
+  Title: 语言哲学 (Teacher: 张新华)
+  Total lectures: 16 (11 with playback)
+  New/retry lectures: 1
+
+  -- Processing: 2026-05-22第8-9节 (2026-5-4)
+    [Time] Start: 2026-05-22 14:24:09
+    [Time] Fetching video URL at 14:24:09
+    Failed to get sub info for 616226: RuntimeError
+    No video URL for 616226, skipping.
+
+──────────────────────────────────────────────────
+[Course] 36117
+  Title: 运筹学基础 (Teacher: 杨卫红)
+  Total lectures: 12 (11 with playback)
+  New/retry lectures: 1
+
+  -- Processing: 2026-05-22第6-8节 (2026-5-4)
+    [Time] Start: 2026-05-22 14:24:12
+    [Time] Fetching video URL at 14:24:12
+    Failed to get sub info for 616035: RuntimeError
+    No video URL for 616035, skipping.
+[Email] Including 3 previously unsent lecture(s).
+
+[Email] Sending summary for 3 lecture(s)...
+[Emailer] Embedded 30 LaTeX images as CID
+[Emailer] Sent: [FiCS] 数据库设计 (1), 马克思主义基本原理 (1), 劳动经济学 (1)
+
+============================================================
+Run complete.
+##[group]Run if [ ! -f data/icourse.db ]; then
+if [ ! -f data/icourse.db ]; then
+  echo "No database file, skipping."
+  exit 0
+fi
+
+AFTER=$(md5sum data/icourse.db | cut -d' ' -f1)
+if [ "$AFTER" = "9f3b1ac5851d326245a24cc5d68971a9" ]; then
+  echo "Database unchanged, skipping commit."
+  exit 0
+fi
+
+# Re-fetch latest remote DB (may have been updated by concurrent workflow)
+DEPLOY_DB=data/icourse.db
+git fetch origin data --depth=1 2>/dev/null || echo "No data branch yet."
+if git rev-parse origin/data >/dev/null 2>&1; then
+  # Try new compressed format, then legacy
+  git show origin/data:data/icourse.db.gz.enc > data/remote.gz.enc 2>/dev/null || true
+  git show origin/data:data/icourse.db.enc > data/remote.enc 2>/dev/null || true
+  # Remove empty files from failed git show
+  find data -name 'remote.*' -empty -delete 2>/dev/null || true
+  if [ -s data/remote.gz.enc ] && \
+     openssl enc -aes-256-cbc -d -pbkdf2 \
+       -in data/remote.gz.enc -out data/remote.db.gz \
+       -pass env:DB_KEY 2>/dev/null && \
+     gzip -d data/remote.db.gz; then
+    echo "Merging local changes into latest remote database..."
+    python scripts/merge_db.py data/icourse.db data/remote.db
+    DEPLOY_DB=data/remote.db
+  elif [ -s data/remote.enc ] && \
+     openssl enc -aes-256-cbc -d -pbkdf2 \
+       -in data/remote.enc -out data/remote.db \
+       -pass env:DB_KEY 2>/dev/null; then
+    echo "Merging local changes into latest remote database (legacy)..."
+    python scripts/merge_db.py data/icourse.db data/remote.db
+    DEPLOY_DB=data/remote.db
+  fi
+fi
+
+# Compress then encrypt (new format)
+gzip -c "$DEPLOY_DB" > data/icourse.db.gz
+openssl enc -aes-256-cbc -salt -pbkdf2 \
+  -in data/icourse.db.gz -out data/icourse.db.gz.enc \
+  -pass env:DB_KEY
+
+echo "Deploying to data branch..."
+mkdir -p /tmp/db_deploy/data
+cp data/icourse.db.gz.enc /tmp/db_deploy/data/
+cd /tmp/db_deploy
+
+git init
+git checkout -b data
+git config user.name "github-actions[bot]"
+git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+git add data/icourse.db.gz.enc
+git commit -m "chore: update encrypted database"
+git push --force "https://LeafCreeper:${GITHUB_TOKEN}@github.com/LeafCreeper/Fudan_iCourse_Subscriber.git" data
+shell: /usr/bin/bash -e {0}
+env:
+  pythonLocation: /opt/hostedtoolcache/Python/3.12.13/x64
+  PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.13/x64/lib/pkgconfig
+  Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+  Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+  Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+  LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.13/x64/lib
+  DB_KEY: ***
+  GITHUB_TOKEN: ***
+##[endgroup]
+Merging local changes into latest remote database...
+Merge complete.
+Deploying to data branch...
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: will change to "main" in Git 3.0. To configure the initial branch name
+hint: to use in all of your new repositories, which will suppress this warning,
+hint: call:
+hint:
+hint: 	git config --global init.defaultBranch <name>
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint: 	git branch -m <name>
+hint:
+hint: Disable this message with "git config set advice.defaultBranchName false"
+Initialized empty Git repository in /tmp/db_deploy/.git/
+Switched to a new branch 'data'
+[data (root-commit) 3f04d3a] chore: update encrypted database
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 data/icourse.db.gz.enc
+To https://github.com/LeafCreeper/Fudan_iCourse_Subscriber.git
+ + a74a274...3f04d3a data -> data (forced update)
+Post job cleanup.
+Cache hit occurred on the primary key asr-models-sensevoice-2024-07-17, not saving cache.
+Post job cleanup.
+Cache hit occurred on the primary key pip-1366df7dbe36a7f0a511949b17e099a068821957b7b1025e52f36e8879f77fa1, not saving cache.
+Post job cleanup.
+Post job cleanup.
+[command]/usr/bin/git version
+git version 2.54.0
+Temporarily overriding HOME='/home/runner/work/_temp/12572fdc-83f8-45a3-afb8-5d17cb7f3b7a' before making global git config changes
+Adding repository directory to the temporary git global config as a safe directory
+[command]/usr/bin/git config --global --add safe.directory /home/runner/work/Fudan_iCourse_Subscriber/Fudan_iCourse_Subscriber
+[command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+[command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+[command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+http.https://github.com/.extraheader
+[command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+[command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+[command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+[command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Cleaning up orphan processes
+##[warning]Node.js 20 actions are deprecated. The following actions are running on Node.js 20 and may not work as expected: actions/cache@v4, actions/checkout@v4, actions/setup-python@v5. Actions will be forced to run with Node.js 24 by default starting June 2nd, 2026. Node.js 20 will be removed from the runner on September 16th, 2026. Please check if updated versions of these actions are available that support Node.js 24. To opt into Node.js 24 now, set the FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true environment variable on the runner or in your workflow file. Once Node.js 24 becomes the default, you can temporarily opt out by setting ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

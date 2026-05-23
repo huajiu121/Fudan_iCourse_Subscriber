@@ -1,0 +1,1426 @@
+﻿2026-05-22T13:57:07.7092768Z Current runner version: '2.334.0'
+##[group]Runner Image Provisioner
+Hosted Compute Agent
+Version: 20260213.493
+Commit: 5c115507f6dd24b8de37d8bbe0bb4509d0cc0fa3
+Build Date: 2026-02-13T00:28:41Z
+Worker ID: {da2087b1-f976-4c11-9788-280e767c2126}
+Azure Region: northcentralus
+##[endgroup]
+##[group]Operating System
+Ubuntu
+24.04.4
+LTS
+##[endgroup]
+##[group]Runner Image
+Image: ubuntu-24.04
+Version: 20260518.149.1
+Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260518.149/images/ubuntu/Ubuntu2404-Readme.md
+Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260518.149
+##[endgroup]
+##[group]GITHUB_TOKEN Permissions
+Contents: write
+Metadata: read
+##[endgroup]
+Secret source: Actions
+Prepare workflow directory
+Prepare all required actions
+Getting action download info
+Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+Download action repository 'actions/cache@v4' (SHA:0057852bfaa89a56745cba8c7296529d2fc39830)
+Complete job name: check
+##[group]Run actions/checkout@v4
+with:
+  repository: LeafCreeper/Fudan_iCourse_Subscriber
+  token: ***
+  ssh-strict: true
+  ssh-user: git
+  persist-credentials: true
+  clean: true
+  sparse-checkout-cone-mode: true
+  fetch-depth: 1
+  fetch-tags: false
+  show-progress: true
+  lfs: false
+  submodules: false
+  set-safe-directory: true
+##[endgroup]
+Syncing repository: LeafCreeper/Fudan_iCourse_Subscriber
+##[group]Getting Git version info
+Working directory is '/home/runner/work/Fudan_iCourse_Subscriber/Fudan_iCourse_Subscriber'
+[command]/usr/bin/git version
+git version 2.54.0
+##[endgroup]
+Temporarily overriding HOME='/home/runner/work/_temp/f8f10e2d-7e25-499a-bc8f-0c39bc42e9e4' before making global git config changes
+Adding repository directory to the temporary git global config as a safe directory
+[command]/usr/bin/git config --global --add safe.directory /home/runner/work/Fudan_iCourse_Subscriber/Fudan_iCourse_Subscriber
+Deleting the contents of '/home/runner/work/Fudan_iCourse_Subscriber/Fudan_iCourse_Subscriber'
+##[group]Initializing the repository
+[command]/usr/bin/git init /home/runner/work/Fudan_iCourse_Subscriber/Fudan_iCourse_Subscriber
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: will change to "main" in Git 3.0. To configure the initial branch name
+hint: to use in all of your new repositories, which will suppress this warning,
+hint: call:
+hint:
+hint: 	git config --global init.defaultBranch <name>
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint: 	git branch -m <name>
+hint:
+hint: Disable this message with "git config set advice.defaultBranchName false"
+Initialized empty Git repository in /home/runner/work/Fudan_iCourse_Subscriber/Fudan_iCourse_Subscriber/.git/
+[command]/usr/bin/git remote add origin https://github.com/LeafCreeper/Fudan_iCourse_Subscriber
+##[endgroup]
+##[group]Disabling automatic garbage collection
+[command]/usr/bin/git config --local gc.auto 0
+##[endgroup]
+##[group]Setting up auth
+[command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+[command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+[command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+[command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+[command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+[command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+[command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+##[endgroup]
+##[group]Fetching the repository
+[command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +501008e19d692e7ec48543ba7371ce07c2b61a88:refs/remotes/origin/main
+From https://github.com/LeafCreeper/Fudan_iCourse_Subscriber
+ * [new ref]         501008e19d692e7ec48543ba7371ce07c2b61a88 -> origin/main
+##[endgroup]
+##[group]Determining the checkout info
+##[endgroup]
+[command]/usr/bin/git sparse-checkout disable
+[command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+##[group]Checking out the ref
+[command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+Switched to a new branch 'main'
+branch 'main' set up to track 'origin/main'.
+##[endgroup]
+[command]/usr/bin/git log -1 --format=%H
+501008e19d692e7ec48543ba7371ce07c2b61a88
+##[group]Run actions/setup-python@v5
+with:
+  python-version: 3.12
+  check-latest: false
+  token: ***
+  update-environment: true
+  allow-prereleases: false
+  freethreaded: false
+##[endgroup]
+##[group]Installed versions
+Successfully set up CPython (3.12.13)
+##[endgroup]
+##[group]Run actions/cache@v4
+with:
+  path: /opt/hostedtoolcache/Python/3.12.13/x64/lib/python*/site-packages
+  key: pip-1366df7dbe36a7f0a511949b17e099a068821957b7b1025e52f36e8879f77fa1
+  enableCrossOsArchive: false
+  fail-on-cache-miss: false
+  lookup-only: false
+  save-always: false
+env:
+  pythonLocation: /opt/hostedtoolcache/Python/3.12.13/x64
+  PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.13/x64/lib/pkgconfig
+  Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+  Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+  Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+  LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.13/x64/lib
+##[endgroup]
+Cache hit for: pip-1366df7dbe36a7f0a511949b17e099a068821957b7b1025e52f36e8879f77fa1
+Received 53904999 of 53904999 (100.0%), 87.6 MBs/sec
+Cache Size: ~51 MB (53904999 B)
+[command]/usr/bin/tar -xf /home/runner/work/_temp/f952e712-e3e6-41e7-a973-98f62cc714fa/cache.tzst -P -C /home/runner/work/Fudan_iCourse_Subscriber/Fudan_iCourse_Subscriber --use-compress-program unzstd
+Cache restored successfully
+Cache restored from key: pip-1366df7dbe36a7f0a511949b17e099a068821957b7b1025e52f36e8879f77fa1
+##[group]Run sudo apt-get update
+sudo apt-get update
+sudo apt-get install -y ffmpeg
+shell: /usr/bin/bash -e {0}
+env:
+  pythonLocation: /opt/hostedtoolcache/Python/3.12.13/x64
+  PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.13/x64/lib/pkgconfig
+  Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+  Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+  Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+  LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.13/x64/lib
+##[endgroup]
+Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+Hit:2 http://azure.archive.ubuntu.com/ubuntu noble InRelease
+Hit:6 https://packages.microsoft.com/repos/azure-cli noble InRelease
+Get:7 https://packages.microsoft.com/ubuntu/24.04/prod noble InRelease [3600 B]
+Get:3 http://azure.archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+Get:4 http://azure.archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+Get:5 http://azure.archive.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+Get:8 https://dl.google.com/linux/chrome-stable/deb stable InRelease [1825 B]
+Get:9 https://packages.microsoft.com/ubuntu/24.04/prod noble/main arm64 Packages [125 kB]
+Get:10 https://packages.microsoft.com/ubuntu/24.04/prod noble/main amd64 Packages [154 kB]
+Get:11 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [2007 kB]
+Get:12 http://azure.archive.ubuntu.com/ubuntu noble-updates/main Translation-en [355 kB]
+Get:13 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 Components [177 kB]
+Get:14 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [1690 kB]
+Get:15 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe Translation-en [328 kB]
+Get:16 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Components [386 kB]
+Get:17 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Packages [3202 kB]
+Get:18 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted Translation-en [740 kB]
+Get:19 http://azure.archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Packages [44.7 kB]
+Get:20 http://azure.archive.ubuntu.com/ubuntu noble-updates/multiverse Translation-en [10.9 kB]
+Get:21 http://azure.archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Components [940 B]
+Get:22 http://azure.archive.ubuntu.com/ubuntu noble-backports/main amd64 Components [5776 B]
+Get:23 http://azure.archive.ubuntu.com/ubuntu noble-backports/universe amd64 Components [10.5 kB]
+Get:24 http://azure.archive.ubuntu.com/ubuntu noble-security/main amd64 Packages [1696 kB]
+Get:25 http://azure.archive.ubuntu.com/ubuntu noble-security/main Translation-en [267 kB]
+Get:26 http://azure.archive.ubuntu.com/ubuntu noble-security/main amd64 Components [22.0 kB]
+Get:27 http://azure.archive.ubuntu.com/ubuntu noble-security/universe amd64 Packages [1188 kB]
+Get:28 http://azure.archive.ubuntu.com/ubuntu noble-security/universe Translation-en [229 kB]
+Get:29 http://azure.archive.ubuntu.com/ubuntu noble-security/universe amd64 Components [74.1 kB]
+Get:30 http://azure.archive.ubuntu.com/ubuntu noble-security/restricted amd64 Packages [2997 kB]
+Get:31 http://azure.archive.ubuntu.com/ubuntu noble-security/restricted Translation-en [697 kB]
+Get:32 http://azure.archive.ubuntu.com/ubuntu noble-security/multiverse amd64 Packages [39.3 kB]
+Get:33 http://azure.archive.ubuntu.com/ubuntu noble-security/multiverse Translation-en [8564 B]
+Get:34 https://dl.google.com/linux/chrome-stable/deb stable/main amd64 Packages [1219 B]
+Fetched 16.8 MB in 2s (8876 kB/s)
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+The following additional packages will be installed:
+  i965-va-driver intel-media-va-driver libaacs0 libass9 libasyncns0
+  libavc1394-0 libavcodec60 libavdevice60 libavfilter9 libavformat60
+  libavutil58 libbdplus0 libblas3 libbluray2 libbs2b0 libcaca0
+  libcdio-cdda2t64 libcdio-paranoia2t64 libcdio19t64 libchromaprint1 libcjson1
+  libcodec2-1.2 libdav1d7 libdc1394-25 libdecor-0-0 libdecor-0-plugin-1-gtk
+  libflac12t64 libflite1 libgme0 libgsm1 libhwy1t64 libiec61883-0 libigdgmm12
+  libjack-jackd2-0 libjxl0.7 liblapack3 liblilv-0-0 libmbedcrypto7t64
+  libmp3lame0 libmpg123-0t64 libmysofa1 libopenal-data libopenal1
+  libopenmpt0t64 libopus0 libplacebo338 libpocketsphinx3 libpostproc57
+  libpulse0 librav1e0 libraw1394-11 librist4 librsvg2-2 librsvg2-common
+  librubberband2 libsamplerate0 libsdl2-2.0-0 libserd-0-0 libshine3
+  libsndfile1 libsndio7.0 libsord-0-0 libsoxr0 libspeex1 libsphinxbase3t64
+  libsratom-0-0 libsrt1.5-gnutls libssh-gcrypt-4 libsvtav1enc1d1
+  libswresample4 libswscale7 libtheora0 libtwolame0 libudfread0 libunibreak5
+  libva-drm2 libva-x11-2 libva2 libvdpau1 libvidstab1.1 libvorbisenc2 libvpl2
+  libvpx9 libx264-164 libx265-199 libxcb-shape0 libxv1 libxvidcore4 libzimg2
+  libzix-0-0 libzvbi-common libzvbi0t64 mesa-va-drivers mesa-vdpau-drivers
+  ocl-icd-libopencl1 pocketsphinx-en-us va-driver-all vdpau-driver-all
+Suggested packages:
+  ffmpeg-doc i965-va-driver-shaders libcuda1 libnvcuvid1 libnvidia-encode1
+  libbluray-bdj jackd2 libportaudio2 opus-tools pulseaudio libraw1394-doc
+  librsvg2-bin serdi sndiod sordi speex opencl-icd libvdpau-va-gl1
+The following NEW packages will be installed:
+  ffmpeg i965-va-driver intel-media-va-driver libaacs0 libass9 libasyncns0
+  libavc1394-0 libavcodec60 libavdevice60 libavfilter9 libavformat60
+  libavutil58 libbdplus0 libblas3 libbluray2 libbs2b0 libcaca0
+  libcdio-cdda2t64 libcdio-paranoia2t64 libcdio19t64 libchromaprint1 libcjson1
+  libcodec2-1.2 libdav1d7 libdc1394-25 libdecor-0-0 libdecor-0-plugin-1-gtk
+  libflac12t64 libflite1 libgme0 libgsm1 libhwy1t64 libiec61883-0 libigdgmm12
+  libjack-jackd2-0 libjxl0.7 liblapack3 liblilv-0-0 libmbedcrypto7t64
+  libmp3lame0 libmpg123-0t64 libmysofa1 libopenal-data libopenal1
+  libopenmpt0t64 libopus0 libplacebo338 libpocketsphinx3 libpostproc57
+  libpulse0 librav1e0 libraw1394-11 librist4 librsvg2-2 librsvg2-common
+  librubberband2 libsamplerate0 libsdl2-2.0-0 libserd-0-0 libshine3
+  libsndfile1 libsndio7.0 libsord-0-0 libsoxr0 libspeex1 libsphinxbase3t64
+  libsratom-0-0 libsrt1.5-gnutls libssh-gcrypt-4 libsvtav1enc1d1
+  libswresample4 libswscale7 libtheora0 libtwolame0 libudfread0 libunibreak5
+  libva-drm2 libva-x11-2 libva2 libvdpau1 libvidstab1.1 libvorbisenc2 libvpl2
+  libvpx9 libx264-164 libx265-199 libxcb-shape0 libxv1 libxvidcore4 libzimg2
+  libzix-0-0 libzvbi-common libzvbi0t64 mesa-va-drivers mesa-vdpau-drivers
+  ocl-icd-libopencl1 pocketsphinx-en-us va-driver-all vdpau-driver-all
+0 upgraded, 99 newly installed, 0 to remove and 16 not upgraded.
+Need to get 94.1 MB of archives.
+After this operation, 227 MB of additional disk space will be used.
+Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+Get:2 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 libva2 amd64 2.20.0-2ubuntu0.1 [66.3 kB]
+Get:3 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 libva-drm2 amd64 2.20.0-2ubuntu0.1 [7132 B]
+Get:4 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 libva-x11-2 amd64 2.20.0-2ubuntu0.1 [12.0 kB]
+Get:5 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libvdpau1 amd64 1.5-2build1 [27.8 kB]
+Get:6 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libvpl2 amd64 2023.3.0-1build1 [99.8 kB]
+Get:7 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 ocl-icd-libopencl1 amd64 2.3.2-1build1 [38.5 kB]
+Get:8 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libavutil58 amd64 7:6.1.1-3ubuntu5 [401 kB]
+Get:9 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libcodec2-1.2 amd64 1.2.0-2build1 [8998 kB]
+Get:10 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libdav1d7 amd64 1.4.1-1build1 [604 kB]
+Get:11 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libgsm1 amd64 1.0.22-1build1 [27.8 kB]
+Get:12 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libhwy1t64 amd64 1.0.7-8.1build1 [584 kB]
+Get:13 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 libjxl0.7 amd64 0.7.0-10.2ubuntu6.1 [1001 kB]
+Get:14 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libmp3lame0 amd64 3.100-6build1 [142 kB]
+Get:15 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libopus0 amd64 1.4-1build1 [208 kB]
+Get:16 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 librav1e0 amd64 0.7.1-2 [1022 kB]
+Get:17 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 librsvg2-2 amd64 2.58.0+dfsg-1build1 [2135 kB]
+Get:18 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libshine3 amd64 3.1.1-2build1 [23.2 kB]
+Get:19 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 libspeex1 amd64 1.2.1-2ubuntu2.24.04.1 [59.6 kB]
+Get:20 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libsvtav1enc1d1 amd64 1.7.0+dfsg-2build1 [2425 kB]
+Get:21 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libsoxr0 amd64 0.1.3-4build3 [80.0 kB]
+Get:22 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libswresample4 amd64 7:6.1.1-3ubuntu5 [63.8 kB]
+Get:23 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libtheora0 amd64 1.1.1+dfsg.1-16.1build3 [211 kB]
+Get:24 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libtwolame0 amd64 0.4.0-2build3 [52.3 kB]
+Get:25 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libvorbisenc2 amd64 1.3.7-1build3 [80.8 kB]
+Get:26 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 libvpx9 amd64 1.14.0-1ubuntu2.3 [1143 kB]
+Get:27 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libx264-164 amd64 2:0.164.3108+git31e19f9-1 [604 kB]
+Get:28 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libx265-199 amd64 3.5-2build1 [1226 kB]
+Get:29 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libxvidcore4 amd64 2:1.3.7-1build1 [219 kB]
+Get:30 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libzvbi-common all 0.2.42-2 [42.4 kB]
+Get:31 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libzvbi0t64 amd64 0.2.42-2 [261 kB]
+Get:32 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libavcodec60 amd64 7:6.1.1-3ubuntu5 [5851 kB]
+Get:33 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libraw1394-11 amd64 2.1.2-2build3 [26.2 kB]
+Get:34 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libavc1394-0 amd64 0.5.4-5build3 [15.4 kB]
+Get:35 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libunibreak5 amd64 5.1-2build1 [25.0 kB]
+Get:36 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libass9 amd64 1:0.17.1-2build1 [104 kB]
+Get:37 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libudfread0 amd64 1.1.2-1build1 [19.0 kB]
+Get:38 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libbluray2 amd64 1:1.3.4-1build1 [159 kB]
+Get:39 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libchromaprint1 amd64 1.5.1-5 [30.5 kB]
+Get:40 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libgme0 amd64 0.6.3-7build1 [134 kB]
+Get:41 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 libmpg123-0t64 amd64 1.32.5-1ubuntu1.1 [169 kB]
+Get:42 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libopenmpt0t64 amd64 0.7.3-1.1build3 [647 kB]
+Get:43 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libcjson1 amd64 1.7.17-1 [24.8 kB]
+Get:44 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libmbedcrypto7t64 amd64 2.28.8-1 [209 kB]
+Get:45 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 librist4 amd64 0.2.10+dfsg-2 [74.9 kB]
+Get:46 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libsrt1.5-gnutls amd64 1.5.3-1build2 [316 kB]
+Get:47 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 libssh-gcrypt-4 amd64 0.10.6-2ubuntu0.4 [225 kB]
+Get:48 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libavformat60 amd64 7:6.1.1-3ubuntu5 [1153 kB]
+Get:49 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libbs2b0 amd64 3.1.0+dfsg-7build1 [10.6 kB]
+Get:50 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libflite1 amd64 2.2-6build3 [13.6 MB]
+Get:51 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libserd-0-0 amd64 0.32.2-1 [43.6 kB]
+Get:52 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libzix-0-0 amd64 0.4.2-2build1 [23.6 kB]
+Get:53 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libsord-0-0 amd64 0.16.16-2build1 [15.8 kB]
+Get:54 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libsratom-0-0 amd64 0.6.16-1build1 [17.3 kB]
+Get:55 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 liblilv-0-0 amd64 0.24.22-1build1 [41.0 kB]
+Get:56 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libmysofa1 amd64 1.3.2+dfsg-2ubuntu2 [1158 kB]
+Get:57 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libplacebo338 amd64 6.338.2-2build1 [2654 kB]
+Get:58 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 libblas3 amd64 3.12.0-3build1.1 [238 kB]
+Get:59 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 liblapack3 amd64 3.12.0-3build1.1 [2646 kB]
+Get:60 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libasyncns0 amd64 0.8-6build4 [11.3 kB]
+Get:61 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libflac12t64 amd64 1.4.3+ds-2.1ubuntu2 [197 kB]
+Get:62 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 libsndfile1 amd64 1.2.2-1ubuntu5.24.04.1 [209 kB]
+Get:63 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 libpulse0 amd64 1:16.1+dfsg1-2ubuntu10.1 [292 kB]
+Get:64 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libsphinxbase3t64 amd64 0.8+5prealpha+1-17build2 [126 kB]
+Get:65 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libpocketsphinx3 amd64 0.8.0+real5prealpha+1-15ubuntu5 [133 kB]
+Get:66 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libpostproc57 amd64 7:6.1.1-3ubuntu5 [49.9 kB]
+Get:67 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libsamplerate0 amd64 0.2.2-4build1 [1344 kB]
+Get:68 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 librubberband2 amd64 3.3.0+dfsg-2build1 [130 kB]
+Get:69 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libswscale7 amd64 7:6.1.1-3ubuntu5 [193 kB]
+Get:70 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libvidstab1.1 amd64 1.1.0-2build1 [38.5 kB]
+Get:71 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libzimg2 amd64 3.0.5+ds1-1build1 [254 kB]
+Get:72 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libavfilter9 amd64 7:6.1.1-3ubuntu5 [4235 kB]
+Get:73 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 libcaca0 amd64 0.99.beta20-4ubuntu0.1 [209 kB]
+Get:74 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 libcdio19t64 amd64 2.1.0-4.1ubuntu1.2 [62.4 kB]
+Get:75 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libcdio-cdda2t64 amd64 10.2+2.0.1-1.1build2 [16.5 kB]
+Get:76 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libcdio-paranoia2t64 amd64 10.2+2.0.1-1.1build2 [16.6 kB]
+Get:77 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libdc1394-25 amd64 2.2.6-4build1 [90.1 kB]
+Get:78 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libiec61883-0 amd64 1.2.0-6build1 [24.5 kB]
+Get:79 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libjack-jackd2-0 amd64 1.9.21~dfsg-3ubuntu3 [289 kB]
+Get:80 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libopenal-data all 1:1.23.1-4build1 [161 kB]
+Get:81 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libsndio7.0 amd64 1.9.0-0.3build3 [29.6 kB]
+Get:82 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libopenal1 amd64 1:1.23.1-4build1 [540 kB]
+Get:83 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libdecor-0-0 amd64 0.2.2-1build2 [16.5 kB]
+Get:84 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 libsdl2-2.0-0 amd64 2.30.0+dfsg-1ubuntu3.1 [686 kB]
+Get:85 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libxcb-shape0 amd64 1.15-1ubuntu2 [6100 B]
+Get:86 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libxv1 amd64 2:1.0.11-1.1build1 [10.7 kB]
+Get:87 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libavdevice60 amd64 7:6.1.1-3ubuntu5 [82.3 kB]
+Get:88 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 ffmpeg amd64 7:6.1.1-3ubuntu5 [1879 kB]
+Get:89 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 libigdgmm12 amd64 22.3.17+ds1-1ubuntu1 [145 kB]
+Get:90 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 intel-media-va-driver amd64 24.1.0+dfsg1-1ubuntu0.2 [3163 kB]
+Get:91 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libaacs0 amd64 0.11.1-2build1 [62.9 kB]
+Get:92 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 libbdplus0 amd64 0.2.0-3build1 [52.2 kB]
+Get:93 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 libdecor-0-plugin-1-gtk amd64 0.2.2-1build2 [22.2 kB]
+Get:94 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 librsvg2-common amd64 2.58.0+dfsg-1build1 [11.8 kB]
+Get:95 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 mesa-va-drivers amd64 25.2.8-0ubuntu0.24.04.1 [6776 B]
+Get:96 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 mesa-vdpau-drivers amd64 25.2.8-0ubuntu0.24.04.1 [23.0 kB]
+Get:97 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 i965-va-driver amd64 2.4.1+dfsg1-1ubuntu0.1 [332 kB]
+Get:98 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 va-driver-all amd64 2.20.0-2ubuntu0.1 [4946 B]
+Get:99 http://azure.archive.ubuntu.com/ubuntu noble/main amd64 vdpau-driver-all amd64 1.5-2build1 [4414 B]
+Get:100 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 pocketsphinx-en-us all 0.8.0+real5prealpha+1-15ubuntu5 [27.4 MB]
+Fetched 94.1 MB in 5s (20.8 MB/s)
+Selecting previously unselected package libva2:amd64.
+(Reading database ... 
+(Reading database ... 5%
+(Reading database ... 10%
+(Reading database ... 15%
+(Reading database ... 20%
+(Reading database ... 25%
+(Reading database ... 30%
+(Reading database ... 35%
+(Reading database ... 40%
+(Reading database ... 45%
+(Reading database ... 50%
+(Reading database ... 55%
+(Reading database ... 60%
+(Reading database ... 65%
+(Reading database ... 70%
+(Reading database ... 75%
+(Reading database ... 80%
+(Reading database ... 85%
+(Reading database ... 90%
+(Reading database ... 95%
+(Reading database ... 100%
+(Reading database ... 202288 files and directories currently installed.)
+Preparing to unpack .../00-libva2_2.20.0-2ubuntu0.1_amd64.deb ...
+Unpacking libva2:amd64 (2.20.0-2ubuntu0.1) ...
+Selecting previously unselected package libva-drm2:amd64.
+Preparing to unpack .../01-libva-drm2_2.20.0-2ubuntu0.1_amd64.deb ...
+Unpacking libva-drm2:amd64 (2.20.0-2ubuntu0.1) ...
+Selecting previously unselected package libva-x11-2:amd64.
+Preparing to unpack .../02-libva-x11-2_2.20.0-2ubuntu0.1_amd64.deb ...
+Unpacking libva-x11-2:amd64 (2.20.0-2ubuntu0.1) ...
+Selecting previously unselected package libvdpau1:amd64.
+Preparing to unpack .../03-libvdpau1_1.5-2build1_amd64.deb ...
+Unpacking libvdpau1:amd64 (1.5-2build1) ...
+Selecting previously unselected package libvpl2.
+Preparing to unpack .../04-libvpl2_2023.3.0-1build1_amd64.deb ...
+Unpacking libvpl2 (2023.3.0-1build1) ...
+Selecting previously unselected package ocl-icd-libopencl1:amd64.
+Preparing to unpack .../05-ocl-icd-libopencl1_2.3.2-1build1_amd64.deb ...
+Unpacking ocl-icd-libopencl1:amd64 (2.3.2-1build1) ...
+Selecting previously unselected package libavutil58:amd64.
+Preparing to unpack .../06-libavutil58_7%3a6.1.1-3ubuntu5_amd64.deb ...
+Unpacking libavutil58:amd64 (7:6.1.1-3ubuntu5) ...
+Selecting previously unselected package libcodec2-1.2:amd64.
+Preparing to unpack .../07-libcodec2-1.2_1.2.0-2build1_amd64.deb ...
+Unpacking libcodec2-1.2:amd64 (1.2.0-2build1) ...
+Selecting previously unselected package libdav1d7:amd64.
+Preparing to unpack .../08-libdav1d7_1.4.1-1build1_amd64.deb ...
+Unpacking libdav1d7:amd64 (1.4.1-1build1) ...
+Selecting previously unselected package libgsm1:amd64.
+Preparing to unpack .../09-libgsm1_1.0.22-1build1_amd64.deb ...
+Unpacking libgsm1:amd64 (1.0.22-1build1) ...
+Selecting previously unselected package libhwy1t64:amd64.
+Preparing to unpack .../10-libhwy1t64_1.0.7-8.1build1_amd64.deb ...
+Unpacking libhwy1t64:amd64 (1.0.7-8.1build1) ...
+Selecting previously unselected package libjxl0.7:amd64.
+Preparing to unpack .../11-libjxl0.7_0.7.0-10.2ubuntu6.1_amd64.deb ...
+Unpacking libjxl0.7:amd64 (0.7.0-10.2ubuntu6.1) ...
+Selecting previously unselected package libmp3lame0:amd64.
+Preparing to unpack .../12-libmp3lame0_3.100-6build1_amd64.deb ...
+Unpacking libmp3lame0:amd64 (3.100-6build1) ...
+Selecting previously unselected package libopus0:amd64.
+Preparing to unpack .../13-libopus0_1.4-1build1_amd64.deb ...
+Unpacking libopus0:amd64 (1.4-1build1) ...
+Selecting previously unselected package librav1e0:amd64.
+Preparing to unpack .../14-librav1e0_0.7.1-2_amd64.deb ...
+Unpacking librav1e0:amd64 (0.7.1-2) ...
+Selecting previously unselected package librsvg2-2:amd64.
+Preparing to unpack .../15-librsvg2-2_2.58.0+dfsg-1build1_amd64.deb ...
+Unpacking librsvg2-2:amd64 (2.58.0+dfsg-1build1) ...
+Selecting previously unselected package libshine3:amd64.
+Preparing to unpack .../16-libshine3_3.1.1-2build1_amd64.deb ...
+Unpacking libshine3:amd64 (3.1.1-2build1) ...
+Selecting previously unselected package libspeex1:amd64.
+Preparing to unpack .../17-libspeex1_1.2.1-2ubuntu2.24.04.1_amd64.deb ...
+Unpacking libspeex1:amd64 (1.2.1-2ubuntu2.24.04.1) ...
+Selecting previously unselected package libsvtav1enc1d1:amd64.
+Preparing to unpack .../18-libsvtav1enc1d1_1.7.0+dfsg-2build1_amd64.deb ...
+Unpacking libsvtav1enc1d1:amd64 (1.7.0+dfsg-2build1) ...
+Selecting previously unselected package libsoxr0:amd64.
+Preparing to unpack .../19-libsoxr0_0.1.3-4build3_amd64.deb ...
+Unpacking libsoxr0:amd64 (0.1.3-4build3) ...
+Selecting previously unselected package libswresample4:amd64.
+Preparing to unpack .../20-libswresample4_7%3a6.1.1-3ubuntu5_amd64.deb ...
+Unpacking libswresample4:amd64 (7:6.1.1-3ubuntu5) ...
+Selecting previously unselected package libtheora0:amd64.
+Preparing to unpack .../21-libtheora0_1.1.1+dfsg.1-16.1build3_amd64.deb ...
+Unpacking libtheora0:amd64 (1.1.1+dfsg.1-16.1build3) ...
+Selecting previously unselected package libtwolame0:amd64.
+Preparing to unpack .../22-libtwolame0_0.4.0-2build3_amd64.deb ...
+Unpacking libtwolame0:amd64 (0.4.0-2build3) ...
+Selecting previously unselected package libvorbisenc2:amd64.
+Preparing to unpack .../23-libvorbisenc2_1.3.7-1build3_amd64.deb ...
+Unpacking libvorbisenc2:amd64 (1.3.7-1build3) ...
+Selecting previously unselected package libvpx9:amd64.
+Preparing to unpack .../24-libvpx9_1.14.0-1ubuntu2.3_amd64.deb ...
+Unpacking libvpx9:amd64 (1.14.0-1ubuntu2.3) ...
+Selecting previously unselected package libx264-164:amd64.
+Preparing to unpack .../25-libx264-164_2%3a0.164.3108+git31e19f9-1_amd64.deb ...
+Unpacking libx264-164:amd64 (2:0.164.3108+git31e19f9-1) ...
+Selecting previously unselected package libx265-199:amd64.
+Preparing to unpack .../26-libx265-199_3.5-2build1_amd64.deb ...
+Unpacking libx265-199:amd64 (3.5-2build1) ...
+Selecting previously unselected package libxvidcore4:amd64.
+Preparing to unpack .../27-libxvidcore4_2%3a1.3.7-1build1_amd64.deb ...
+Unpacking libxvidcore4:amd64 (2:1.3.7-1build1) ...
+Selecting previously unselected package libzvbi-common.
+Preparing to unpack .../28-libzvbi-common_0.2.42-2_all.deb ...
+Unpacking libzvbi-common (0.2.42-2) ...
+Selecting previously unselected package libzvbi0t64:amd64.
+Preparing to unpack .../29-libzvbi0t64_0.2.42-2_amd64.deb ...
+Unpacking libzvbi0t64:amd64 (0.2.42-2) ...
+Selecting previously unselected package libavcodec60:amd64.
+Preparing to unpack .../30-libavcodec60_7%3a6.1.1-3ubuntu5_amd64.deb ...
+Unpacking libavcodec60:amd64 (7:6.1.1-3ubuntu5) ...
+Selecting previously unselected package libraw1394-11:amd64.
+Preparing to unpack .../31-libraw1394-11_2.1.2-2build3_amd64.deb ...
+Unpacking libraw1394-11:amd64 (2.1.2-2build3) ...
+Selecting previously unselected package libavc1394-0:amd64.
+Preparing to unpack .../32-libavc1394-0_0.5.4-5build3_amd64.deb ...
+Unpacking libavc1394-0:amd64 (0.5.4-5build3) ...
+Selecting previously unselected package libunibreak5:amd64.
+Preparing to unpack .../33-libunibreak5_5.1-2build1_amd64.deb ...
+Unpacking libunibreak5:amd64 (5.1-2build1) ...
+Selecting previously unselected package libass9:amd64.
+Preparing to unpack .../34-libass9_1%3a0.17.1-2build1_amd64.deb ...
+Unpacking libass9:amd64 (1:0.17.1-2build1) ...
+Selecting previously unselected package libudfread0:amd64.
+Preparing to unpack .../35-libudfread0_1.1.2-1build1_amd64.deb ...
+Unpacking libudfread0:amd64 (1.1.2-1build1) ...
+Selecting previously unselected package libbluray2:amd64.
+Preparing to unpack .../36-libbluray2_1%3a1.3.4-1build1_amd64.deb ...
+Unpacking libbluray2:amd64 (1:1.3.4-1build1) ...
+Selecting previously unselected package libchromaprint1:amd64.
+Preparing to unpack .../37-libchromaprint1_1.5.1-5_amd64.deb ...
+Unpacking libchromaprint1:amd64 (1.5.1-5) ...
+Selecting previously unselected package libgme0:amd64.
+Preparing to unpack .../38-libgme0_0.6.3-7build1_amd64.deb ...
+Unpacking libgme0:amd64 (0.6.3-7build1) ...
+Selecting previously unselected package libmpg123-0t64:amd64.
+Preparing to unpack .../39-libmpg123-0t64_1.32.5-1ubuntu1.1_amd64.deb ...
+Unpacking libmpg123-0t64:amd64 (1.32.5-1ubuntu1.1) ...
+Selecting previously unselected package libopenmpt0t64:amd64.
+Preparing to unpack .../40-libopenmpt0t64_0.7.3-1.1build3_amd64.deb ...
+Unpacking libopenmpt0t64:amd64 (0.7.3-1.1build3) ...
+Selecting previously unselected package libcjson1:amd64.
+Preparing to unpack .../41-libcjson1_1.7.17-1_amd64.deb ...
+Unpacking libcjson1:amd64 (1.7.17-1) ...
+Selecting previously unselected package libmbedcrypto7t64:amd64.
+Preparing to unpack .../42-libmbedcrypto7t64_2.28.8-1_amd64.deb ...
+Unpacking libmbedcrypto7t64:amd64 (2.28.8-1) ...
+Selecting previously unselected package librist4:amd64.
+Preparing to unpack .../43-librist4_0.2.10+dfsg-2_amd64.deb ...
+Unpacking librist4:amd64 (0.2.10+dfsg-2) ...
+Selecting previously unselected package libsrt1.5-gnutls:amd64.
+Preparing to unpack .../44-libsrt1.5-gnutls_1.5.3-1build2_amd64.deb ...
+Unpacking libsrt1.5-gnutls:amd64 (1.5.3-1build2) ...
+Selecting previously unselected package libssh-gcrypt-4:amd64.
+Preparing to unpack .../45-libssh-gcrypt-4_0.10.6-2ubuntu0.4_amd64.deb ...
+Unpacking libssh-gcrypt-4:amd64 (0.10.6-2ubuntu0.4) ...
+Selecting previously unselected package libavformat60:amd64.
+Preparing to unpack .../46-libavformat60_7%3a6.1.1-3ubuntu5_amd64.deb ...
+Unpacking libavformat60:amd64 (7:6.1.1-3ubuntu5) ...
+Selecting previously unselected package libbs2b0:amd64.
+Preparing to unpack .../47-libbs2b0_3.1.0+dfsg-7build1_amd64.deb ...
+Unpacking libbs2b0:amd64 (3.1.0+dfsg-7build1) ...
+Selecting previously unselected package libflite1:amd64.
+Preparing to unpack .../48-libflite1_2.2-6build3_amd64.deb ...
+Unpacking libflite1:amd64 (2.2-6build3) ...
+Selecting previously unselected package libserd-0-0:amd64.
+Preparing to unpack .../49-libserd-0-0_0.32.2-1_amd64.deb ...
+Unpacking libserd-0-0:amd64 (0.32.2-1) ...
+Selecting previously unselected package libzix-0-0:amd64.
+Preparing to unpack .../50-libzix-0-0_0.4.2-2build1_amd64.deb ...
+Unpacking libzix-0-0:amd64 (0.4.2-2build1) ...
+Selecting previously unselected package libsord-0-0:amd64.
+Preparing to unpack .../51-libsord-0-0_0.16.16-2build1_amd64.deb ...
+Unpacking libsord-0-0:amd64 (0.16.16-2build1) ...
+Selecting previously unselected package libsratom-0-0:amd64.
+Preparing to unpack .../52-libsratom-0-0_0.6.16-1build1_amd64.deb ...
+Unpacking libsratom-0-0:amd64 (0.6.16-1build1) ...
+Selecting previously unselected package liblilv-0-0:amd64.
+Preparing to unpack .../53-liblilv-0-0_0.24.22-1build1_amd64.deb ...
+Unpacking liblilv-0-0:amd64 (0.24.22-1build1) ...
+Selecting previously unselected package libmysofa1:amd64.
+Preparing to unpack .../54-libmysofa1_1.3.2+dfsg-2ubuntu2_amd64.deb ...
+Unpacking libmysofa1:amd64 (1.3.2+dfsg-2ubuntu2) ...
+Selecting previously unselected package libplacebo338:amd64.
+Preparing to unpack .../55-libplacebo338_6.338.2-2build1_amd64.deb ...
+Unpacking libplacebo338:amd64 (6.338.2-2build1) ...
+Selecting previously unselected package libblas3:amd64.
+Preparing to unpack .../56-libblas3_3.12.0-3build1.1_amd64.deb ...
+Unpacking libblas3:amd64 (3.12.0-3build1.1) ...
+Selecting previously unselected package liblapack3:amd64.
+Preparing to unpack .../57-liblapack3_3.12.0-3build1.1_amd64.deb ...
+Unpacking liblapack3:amd64 (3.12.0-3build1.1) ...
+Selecting previously unselected package libasyncns0:amd64.
+Preparing to unpack .../58-libasyncns0_0.8-6build4_amd64.deb ...
+Unpacking libasyncns0:amd64 (0.8-6build4) ...
+Selecting previously unselected package libflac12t64:amd64.
+Preparing to unpack .../59-libflac12t64_1.4.3+ds-2.1ubuntu2_amd64.deb ...
+Unpacking libflac12t64:amd64 (1.4.3+ds-2.1ubuntu2) ...
+Selecting previously unselected package libsndfile1:amd64.
+Preparing to unpack .../60-libsndfile1_1.2.2-1ubuntu5.24.04.1_amd64.deb ...
+Unpacking libsndfile1:amd64 (1.2.2-1ubuntu5.24.04.1) ...
+Selecting previously unselected package libpulse0:amd64.
+Preparing to unpack .../61-libpulse0_1%3a16.1+dfsg1-2ubuntu10.1_amd64.deb ...
+Unpacking libpulse0:amd64 (1:16.1+dfsg1-2ubuntu10.1) ...
+Selecting previously unselected package libsphinxbase3t64:amd64.
+Preparing to unpack .../62-libsphinxbase3t64_0.8+5prealpha+1-17build2_amd64.deb ...
+Unpacking libsphinxbase3t64:amd64 (0.8+5prealpha+1-17build2) ...
+Selecting previously unselected package libpocketsphinx3:amd64.
+Preparing to unpack .../63-libpocketsphinx3_0.8.0+real5prealpha+1-15ubuntu5_amd64.deb ...
+Unpacking libpocketsphinx3:amd64 (0.8.0+real5prealpha+1-15ubuntu5) ...
+Selecting previously unselected package libpostproc57:amd64.
+Preparing to unpack .../64-libpostproc57_7%3a6.1.1-3ubuntu5_amd64.deb ...
+Unpacking libpostproc57:amd64 (7:6.1.1-3ubuntu5) ...
+Selecting previously unselected package libsamplerate0:amd64.
+Preparing to unpack .../65-libsamplerate0_0.2.2-4build1_amd64.deb ...
+Unpacking libsamplerate0:amd64 (0.2.2-4build1) ...
+Selecting previously unselected package librubberband2:amd64.
+Preparing to unpack .../66-librubberband2_3.3.0+dfsg-2build1_amd64.deb ...
+Unpacking librubberband2:amd64 (3.3.0+dfsg-2build1) ...
+Selecting previously unselected package libswscale7:amd64.
+Preparing to unpack .../67-libswscale7_7%3a6.1.1-3ubuntu5_amd64.deb ...
+Unpacking libswscale7:amd64 (7:6.1.1-3ubuntu5) ...
+Selecting previously unselected package libvidstab1.1:amd64.
+Preparing to unpack .../68-libvidstab1.1_1.1.0-2build1_amd64.deb ...
+Unpacking libvidstab1.1:amd64 (1.1.0-2build1) ...
+Selecting previously unselected package libzimg2:amd64.
+Preparing to unpack .../69-libzimg2_3.0.5+ds1-1build1_amd64.deb ...
+Unpacking libzimg2:amd64 (3.0.5+ds1-1build1) ...
+Selecting previously unselected package libavfilter9:amd64.
+Preparing to unpack .../70-libavfilter9_7%3a6.1.1-3ubuntu5_amd64.deb ...
+Unpacking libavfilter9:amd64 (7:6.1.1-3ubuntu5) ...
+Selecting previously unselected package libcaca0:amd64.
+Preparing to unpack .../71-libcaca0_0.99.beta20-4ubuntu0.1_amd64.deb ...
+Unpacking libcaca0:amd64 (0.99.beta20-4ubuntu0.1) ...
+Selecting previously unselected package libcdio19t64:amd64.
+Preparing to unpack .../72-libcdio19t64_2.1.0-4.1ubuntu1.2_amd64.deb ...
+Unpacking libcdio19t64:amd64 (2.1.0-4.1ubuntu1.2) ...
+Selecting previously unselected package libcdio-cdda2t64:amd64.
+Preparing to unpack .../73-libcdio-cdda2t64_10.2+2.0.1-1.1build2_amd64.deb ...
+Unpacking libcdio-cdda2t64:amd64 (10.2+2.0.1-1.1build2) ...
+Selecting previously unselected package libcdio-paranoia2t64:amd64.
+Preparing to unpack .../74-libcdio-paranoia2t64_10.2+2.0.1-1.1build2_amd64.deb ...
+Unpacking libcdio-paranoia2t64:amd64 (10.2+2.0.1-1.1build2) ...
+Selecting previously unselected package libdc1394-25:amd64.
+Preparing to unpack .../75-libdc1394-25_2.2.6-4build1_amd64.deb ...
+Unpacking libdc1394-25:amd64 (2.2.6-4build1) ...
+Selecting previously unselected package libiec61883-0:amd64.
+Preparing to unpack .../76-libiec61883-0_1.2.0-6build1_amd64.deb ...
+Unpacking libiec61883-0:amd64 (1.2.0-6build1) ...
+Selecting previously unselected package libjack-jackd2-0:amd64.
+Preparing to unpack .../77-libjack-jackd2-0_1.9.21~dfsg-3ubuntu3_amd64.deb ...
+Unpacking libjack-jackd2-0:amd64 (1.9.21~dfsg-3ubuntu3) ...
+Selecting previously unselected package libopenal-data.
+Preparing to unpack .../78-libopenal-data_1%3a1.23.1-4build1_all.deb ...
+Unpacking libopenal-data (1:1.23.1-4build1) ...
+Selecting previously unselected package libsndio7.0:amd64.
+Preparing to unpack .../79-libsndio7.0_1.9.0-0.3build3_amd64.deb ...
+Unpacking libsndio7.0:amd64 (1.9.0-0.3build3) ...
+Selecting previously unselected package libopenal1:amd64.
+Preparing to unpack .../80-libopenal1_1%3a1.23.1-4build1_amd64.deb ...
+Unpacking libopenal1:amd64 (1:1.23.1-4build1) ...
+Selecting previously unselected package libdecor-0-0:amd64.
+Preparing to unpack .../81-libdecor-0-0_0.2.2-1build2_amd64.deb ...
+Unpacking libdecor-0-0:amd64 (0.2.2-1build2) ...
+Selecting previously unselected package libsdl2-2.0-0:amd64.
+Preparing to unpack .../82-libsdl2-2.0-0_2.30.0+dfsg-1ubuntu3.1_amd64.deb ...
+Unpacking libsdl2-2.0-0:amd64 (2.30.0+dfsg-1ubuntu3.1) ...
+Selecting previously unselected package libxcb-shape0:amd64.
+Preparing to unpack .../83-libxcb-shape0_1.15-1ubuntu2_amd64.deb ...
+Unpacking libxcb-shape0:amd64 (1.15-1ubuntu2) ...
+Selecting previously unselected package libxv1:amd64.
+Preparing to unpack .../84-libxv1_2%3a1.0.11-1.1build1_amd64.deb ...
+Unpacking libxv1:amd64 (2:1.0.11-1.1build1) ...
+Selecting previously unselected package libavdevice60:amd64.
+Preparing to unpack .../85-libavdevice60_7%3a6.1.1-3ubuntu5_amd64.deb ...
+Unpacking libavdevice60:amd64 (7:6.1.1-3ubuntu5) ...
+Selecting previously unselected package ffmpeg.
+Preparing to unpack .../86-ffmpeg_7%3a6.1.1-3ubuntu5_amd64.deb ...
+Unpacking ffmpeg (7:6.1.1-3ubuntu5) ...
+Selecting previously unselected package libigdgmm12:amd64.
+Preparing to unpack .../87-libigdgmm12_22.3.17+ds1-1ubuntu1_amd64.deb ...
+Unpacking libigdgmm12:amd64 (22.3.17+ds1-1ubuntu1) ...
+Selecting previously unselected package intel-media-va-driver:amd64.
+Preparing to unpack .../88-intel-media-va-driver_24.1.0+dfsg1-1ubuntu0.2_amd64.deb ...
+Unpacking intel-media-va-driver:amd64 (24.1.0+dfsg1-1ubuntu0.2) ...
+Selecting previously unselected package libaacs0:amd64.
+Preparing to unpack .../89-libaacs0_0.11.1-2build1_amd64.deb ...
+Unpacking libaacs0:amd64 (0.11.1-2build1) ...
+Selecting previously unselected package libbdplus0:amd64.
+Preparing to unpack .../90-libbdplus0_0.2.0-3build1_amd64.deb ...
+Unpacking libbdplus0:amd64 (0.2.0-3build1) ...
+Selecting previously unselected package libdecor-0-plugin-1-gtk:amd64.
+Preparing to unpack .../91-libdecor-0-plugin-1-gtk_0.2.2-1build2_amd64.deb ...
+Unpacking libdecor-0-plugin-1-gtk:amd64 (0.2.2-1build2) ...
+Selecting previously unselected package librsvg2-common:amd64.
+Preparing to unpack .../92-librsvg2-common_2.58.0+dfsg-1build1_amd64.deb ...
+Unpacking librsvg2-common:amd64 (2.58.0+dfsg-1build1) ...
+Selecting previously unselected package mesa-va-drivers:amd64.
+Preparing to unpack .../93-mesa-va-drivers_25.2.8-0ubuntu0.24.04.1_amd64.deb ...
+Unpacking mesa-va-drivers:amd64 (25.2.8-0ubuntu0.24.04.1) ...
+Selecting previously unselected package mesa-vdpau-drivers:amd64.
+Preparing to unpack .../94-mesa-vdpau-drivers_25.2.8-0ubuntu0.24.04.1_amd64.deb ...
+Unpacking mesa-vdpau-drivers:amd64 (25.2.8-0ubuntu0.24.04.1) ...
+Selecting previously unselected package i965-va-driver:amd64.
+Preparing to unpack .../95-i965-va-driver_2.4.1+dfsg1-1ubuntu0.1_amd64.deb ...
+Unpacking i965-va-driver:amd64 (2.4.1+dfsg1-1ubuntu0.1) ...
+Selecting previously unselected package va-driver-all:amd64.
+Preparing to unpack .../96-va-driver-all_2.20.0-2ubuntu0.1_amd64.deb ...
+Unpacking va-driver-all:amd64 (2.20.0-2ubuntu0.1) ...
+Selecting previously unselected package vdpau-driver-all:amd64.
+Preparing to unpack .../97-vdpau-driver-all_1.5-2build1_amd64.deb ...
+Unpacking vdpau-driver-all:amd64 (1.5-2build1) ...
+Selecting previously unselected package pocketsphinx-en-us.
+Preparing to unpack .../98-pocketsphinx-en-us_0.8.0+real5prealpha+1-15ubuntu5_all.deb ...
+Unpacking pocketsphinx-en-us (0.8.0+real5prealpha+1-15ubuntu5) ...
+Setting up libgme0:amd64 (0.6.3-7build1) ...
+Setting up libchromaprint1:amd64 (1.5.1-5) ...
+Setting up libssh-gcrypt-4:amd64 (0.10.6-2ubuntu0.4) ...
+Setting up libhwy1t64:amd64 (1.0.7-8.1build1) ...
+Setting up libudfread0:amd64 (1.1.2-1build1) ...
+Setting up libraw1394-11:amd64 (2.1.2-2build3) ...
+Setting up libspeex1:amd64 (1.2.1-2ubuntu2.24.04.1) ...
+Setting up libshine3:amd64 (3.1.1-2build1) ...
+Setting up libcaca0:amd64 (0.99.beta20-4ubuntu0.1) ...
+Setting up libvpl2 (2023.3.0-1build1) ...
+Setting up libx264-164:amd64 (2:0.164.3108+git31e19f9-1) ...
+Setting up libtwolame0:amd64 (0.4.0-2build3) ...
+Setting up libmbedcrypto7t64:amd64 (2.28.8-1) ...
+Setting up libgsm1:amd64 (1.0.22-1build1) ...
+Setting up libsoxr0:amd64 (0.1.3-4build3) ...
+Setting up libzix-0-0:amd64 (0.4.2-2build1) ...
+Setting up libcodec2-1.2:amd64 (1.2.0-2build1) ...
+Setting up libmysofa1:amd64 (1.3.2+dfsg-2ubuntu2) ...
+Setting up libxcb-shape0:amd64 (1.15-1ubuntu2) ...
+Setting up libcdio19t64:amd64 (2.1.0-4.1ubuntu1.2) ...
+Setting up libsvtav1enc1d1:amd64 (1.7.0+dfsg-2build1) ...
+Setting up libigdgmm12:amd64 (22.3.17+ds1-1ubuntu1) ...
+Setting up libmpg123-0t64:amd64 (1.32.5-1ubuntu1.1) ...
+Setting up libcjson1:amd64 (1.7.17-1) ...
+Setting up libxvidcore4:amd64 (2:1.3.7-1build1) ...
+Setting up librav1e0:amd64 (0.7.1-2) ...
+Setting up libcdio-cdda2t64:amd64 (10.2+2.0.1-1.1build2) ...
+Setting up librist4:amd64 (0.2.10+dfsg-2) ...
+Setting up librsvg2-2:amd64 (2.58.0+dfsg-1build1) ...
+Setting up libblas3:amd64 (3.12.0-3build1.1) ...
+update-alternatives: using /usr/lib/x86_64-linux-gnu/blas/libblas.so.3 to provide /usr/lib/x86_64-linux-gnu/libblas.so.3 (libblas.so.3-x86_64-linux-gnu) in auto mode
+Setting up libplacebo338:amd64 (6.338.2-2build1) ...
+Setting up libva2:amd64 (2.20.0-2ubuntu0.1) ...
+Setting up libopus0:amd64 (1.4-1build1) ...
+Setting up libcdio-paranoia2t64:amd64 (10.2+2.0.1-1.1build2) ...
+Setting up libdc1394-25:amd64 (2.2.6-4build1) ...
+Setting up intel-media-va-driver:amd64 (24.1.0+dfsg1-1ubuntu0.2) ...
+Setting up libxv1:amd64 (2:1.0.11-1.1build1) ...
+Setting up libunibreak5:amd64 (5.1-2build1) ...
+Setting up libaacs0:amd64 (0.11.1-2build1) ...
+Setting up libjxl0.7:amd64 (0.7.0-10.2ubuntu6.1) ...
+Setting up librsvg2-common:amd64 (2.58.0+dfsg-1build1) ...
+Setting up pocketsphinx-en-us (0.8.0+real5prealpha+1-15ubuntu5) ...
+Setting up libx265-199:amd64 (3.5-2build1) ...
+Setting up libsndio7.0:amd64 (1.9.0-0.3build3) ...
+Setting up libbdplus0:amd64 (0.2.0-3build1) ...
+Setting up libvidstab1.1:amd64 (1.1.0-2build1) ...
+Setting up libvpx9:amd64 (1.14.0-1ubuntu2.3) ...
+Setting up libsrt1.5-gnutls:amd64 (1.5.3-1build2) ...
+Setting up libflite1:amd64 (2.2-6build3) ...
+Setting up libdav1d7:amd64 (1.4.1-1build1) ...
+Setting up libva-drm2:amd64 (2.20.0-2ubuntu0.1) ...
+Setting up ocl-icd-libopencl1:amd64 (2.3.2-1build1) ...
+Setting up libasyncns0:amd64 (0.8-6build4) ...
+Setting up libvdpau1:amd64 (1.5-2build1) ...
+Setting up libbs2b0:amd64 (3.1.0+dfsg-7build1) ...
+Setting up libtheora0:amd64 (1.1.1+dfsg.1-16.1build3) ...
+Setting up libdecor-0-0:amd64 (0.2.2-1build2) ...
+Setting up libzimg2:amd64 (3.0.5+ds1-1build1) ...
+Setting up libopenal-data (1:1.23.1-4build1) ...
+Setting up libflac12t64:amd64 (1.4.3+ds-2.1ubuntu2) ...
+Setting up mesa-va-drivers:amd64 (25.2.8-0ubuntu0.24.04.1) ...
+Setting up libbluray2:amd64 (1:1.3.4-1build1) ...
+Setting up libsamplerate0:amd64 (0.2.2-4build1) ...
+Setting up libva-x11-2:amd64 (2.20.0-2ubuntu0.1) ...
+Setting up libdecor-0-plugin-1-gtk:amd64 (0.2.2-1build2) ...
+Setting up libopenmpt0t64:amd64 (0.7.3-1.1build3) ...
+Setting up libzvbi-common (0.2.42-2) ...
+Setting up libmp3lame0:amd64 (3.100-6build1) ...
+Setting up i965-va-driver:amd64 (2.4.1+dfsg1-1ubuntu0.1) ...
+Setting up libvorbisenc2:amd64 (1.3.7-1build3) ...
+Setting up libiec61883-0:amd64 (1.2.0-6build1) ...
+Setting up libserd-0-0:amd64 (0.32.2-1) ...
+Setting up libavc1394-0:amd64 (0.5.4-5build3) ...
+Setting up mesa-vdpau-drivers:amd64 (25.2.8-0ubuntu0.24.04.1) ...
+Setting up liblapack3:amd64 (3.12.0-3build1.1) ...
+update-alternatives: using /usr/lib/x86_64-linux-gnu/lapack/liblapack.so.3 to provide /usr/lib/x86_64-linux-gnu/liblapack.so.3 (liblapack.so.3-x86_64-linux-gnu) in auto mode
+Setting up libzvbi0t64:amd64 (0.2.42-2) ...
+Setting up libavutil58:amd64 (7:6.1.1-3ubuntu5) ...
+Setting up libopenal1:amd64 (1:1.23.1-4build1) ...
+Setting up libass9:amd64 (1:0.17.1-2build1) ...
+Setting up libswresample4:amd64 (7:6.1.1-3ubuntu5) ...
+Setting up va-driver-all:amd64 (2.20.0-2ubuntu0.1) ...
+Setting up libavcodec60:amd64 (7:6.1.1-3ubuntu5) ...
+Setting up librubberband2:amd64 (3.3.0+dfsg-2build1) ...
+Setting up libjack-jackd2-0:amd64 (1.9.21~dfsg-3ubuntu3) ...
+Setting up vdpau-driver-all:amd64 (1.5-2build1) ...
+Setting up libsord-0-0:amd64 (0.16.16-2build1) ...
+Setting up libpostproc57:amd64 (7:6.1.1-3ubuntu5) ...
+Setting up libsratom-0-0:amd64 (0.6.16-1build1) ...
+Setting up libsndfile1:amd64 (1.2.2-1ubuntu5.24.04.1) ...
+Setting up liblilv-0-0:amd64 (0.24.22-1build1) ...
+Setting up libswscale7:amd64 (7:6.1.1-3ubuntu5) ...
+Setting up libpulse0:amd64 (1:16.1+dfsg1-2ubuntu10.1) ...
+Setting up libavformat60:amd64 (7:6.1.1-3ubuntu5) ...
+Setting up libsphinxbase3t64:amd64 (0.8+5prealpha+1-17build2) ...
+Setting up libsdl2-2.0-0:amd64 (2.30.0+dfsg-1ubuntu3.1) ...
+Setting up libpocketsphinx3:amd64 (0.8.0+real5prealpha+1-15ubuntu5) ...
+Setting up libavfilter9:amd64 (7:6.1.1-3ubuntu5) ...
+Setting up libavdevice60:amd64 (7:6.1.1-3ubuntu5) ...
+Setting up ffmpeg (7:6.1.1-3ubuntu5) ...
+Processing triggers for man-db (2.12.0-4build2) ...
+Not building database; man-db/auto-update is not 'true'.
+Processing triggers for libgdk-pixbuf-2.0-0:amd64 (2.42.10+dfsg-3ubuntu3.3) ...
+Processing triggers for libc-bin (2.39-0ubuntu8.7) ...
+
+Running kernel seems to be up-to-date.
+
+No services need to be restarted.
+
+No containers need to be restarted.
+
+No user sessions are running outdated binaries.
+
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+##[group]Run actions/cache@v4
+with:
+  path: sherpa-onnx-sense-voice-zh-en-ja-ko-yue-2024-07-17/
+silero_vad.onnx
+
+  key: asr-models-sensevoice-2024-07-17
+  enableCrossOsArchive: false
+  fail-on-cache-miss: false
+  lookup-only: false
+  save-always: false
+env:
+  pythonLocation: /opt/hostedtoolcache/Python/3.12.13/x64
+  PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.13/x64/lib/pkgconfig
+  Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+  Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+  Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+  LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.13/x64/lib
+##[endgroup]
+Cache hit for: asr-models-sensevoice-2024-07-17
+Received 104857600 of 1022027624 (10.3%), 99.9 MBs/sec
+Received 264241152 of 1022027624 (25.9%), 125.9 MBs/sec
+Received 415236096 of 1022027624 (40.6%), 131.9 MBs/sec
+Received 557842432 of 1022027624 (54.6%), 132.9 MBs/sec
+Received 700448768 of 1022027624 (68.5%), 133.5 MBs/sec
+Received 805306368 of 1022027624 (78.8%), 127.9 MBs/sec
+Received 960495616 of 1022027624 (94.0%), 130.8 MBs/sec
+Received 1022027624 of 1022027624 (100.0%), 125.1 MBs/sec
+Cache Size: ~975 MB (1022027624 B)
+[command]/usr/bin/tar -xf /home/runner/work/_temp/69a4d4ec-3d8a-4129-8fca-e74db240c101/cache.tzst -P -C /home/runner/work/Fudan_iCourse_Subscriber/Fudan_iCourse_Subscriber --use-compress-program unzstd
+Cache restored successfully
+Cache restored from key: asr-models-sensevoice-2024-07-17
+##[group]Run mkdir -p data
+mkdir -p data
+# Try new compressed format first, then fall back to legacy
+if curl -fL -o data/icourse.db.gz.enc.tmp \
+     "https://raw.githubusercontent.com/LeafCreeper/Fudan_iCourse_Subscriber/data/data/icourse.db.gz.enc" 2>/dev/null; then
+  mv data/icourse.db.gz.enc.tmp data/icourse.db.gz.enc
+  echo "Loaded compressed database from data branch."
+elif curl -fL -o data/icourse.db.enc.tmp \
+     "https://raw.githubusercontent.com/LeafCreeper/Fudan_iCourse_Subscriber/data/data/icourse.db.enc" 2>/dev/null; then
+  mv data/icourse.db.enc.tmp data/icourse.db.enc
+  echo "Loaded legacy (uncompressed) database from data branch."
+else
+  echo "No database found on data branch, starting fresh."
+fi
+shell: /usr/bin/bash -e {0}
+env:
+  pythonLocation: /opt/hostedtoolcache/Python/3.12.13/x64
+  PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.13/x64/lib/pkgconfig
+  Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+  Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+  Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+  LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.13/x64/lib
+##[endgroup]
+Loaded compressed database from data branch.
+##[group]Run if [ -f data/icourse.db.gz.enc ]; then
+if [ -f data/icourse.db.gz.enc ]; then
+  # New format: decrypt then decompress
+  if openssl enc -aes-256-cbc -d -pbkdf2 \
+       -in data/icourse.db.gz.enc -out data/icourse.db.gz \
+       -pass env:DB_KEY 2>/dev/null && \
+     gzip -d data/icourse.db.gz; then
+    echo "Database decrypted and decompressed."
+  else
+    echo "::warning::Decryption failed. Starting with fresh database."
+    rm -f data/icourse.db data/icourse.db.gz
+  fi
+elif [ -f data/icourse.db.enc ]; then
+  # Legacy format: decrypt only
+  if openssl enc -aes-256-cbc -d -pbkdf2 \
+       -in data/icourse.db.enc -out data/icourse.db \
+       -pass env:DB_KEY 2>/dev/null; then
+    echo "Database decrypted (legacy format)."
+  else
+    echo "::warning::Decryption failed. Starting with fresh database."
+    rm -f data/icourse.db
+  fi
+fi
+shell: /usr/bin/bash -e {0}
+env:
+  pythonLocation: /opt/hostedtoolcache/Python/3.12.13/x64
+  PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.13/x64/lib/pkgconfig
+  Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+  Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+  Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+  LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.13/x64/lib
+  DB_KEY: ***
+##[endgroup]
+Database decrypted and decompressed.
+##[group]Run if [ -f data/icourse.db ]; then
+if [ -f data/icourse.db ]; then
+  echo "hash=$(md5sum data/icourse.db | cut -d' ' -f1)" >> $GITHUB_OUTPUT
+else
+  echo "hash=none" >> $GITHUB_OUTPUT
+fi
+shell: /usr/bin/bash -e {0}
+env:
+  pythonLocation: /opt/hostedtoolcache/Python/3.12.13/x64
+  PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.13/x64/lib/pkgconfig
+  Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+  Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+  Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+  LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.13/x64/lib
+##[endgroup]
+##[group]Run python -u main.py
+python -u main.py
+shell: /usr/bin/bash -e {0}
+env:
+  pythonLocation: /opt/hostedtoolcache/Python/3.12.13/x64
+  PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.13/x64/lib/pkgconfig
+  Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+  Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+  Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+  LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.13/x64/lib
+  StuId: ***
+  UISPsw: ***
+  COURSE_IDS: ***
+  DASHSCOPE_API_KEY: ***
+  GEMINI_API_KEY: ***
+  SMTP_EMAIL: ***
+  SMTP_PASSWORD: ***
+  RECEIVER_EMAIL: ***
+##[endgroup]
+============================================================
+iCourse Subscriber — starting run
+============================================================
+
+[Login] WebVPN (attempt 1/5)...
+[1/7] Getting authentication context...
+    lck: OK
+[2/7] Querying authentication methods...
+    authChainCode: OK
+[3/7] Getting RSA public key...
+    Got RSA public key
+[4/7] Encrypting password...
+[5/7] Executing authentication...
+    loginToken: OK
+[6/7] Getting CAS ticket...
+    Ticket extracted.
+[7/7] Establishing WebVPN session...
+    Session established.
+[*] WebVPN login successful!
+[Login] iCourse CAS...
+[*] Starting iCourse CAS authentication through WebVPN...
+[1/7] Initiating CAS login via casapi...
+    lck: OK
+[2/7] Querying auth methods (via WebVPN)...
+    authChainCode: OK
+[3/7] Getting RSA public key (via WebVPN)...
+    Got RSA public key
+[4/7] Encrypting password...
+[5/7] Executing authentication (via WebVPN)...
+    loginToken: OK
+[6/7] Getting CAS ticket (via WebVPN)...
+    Ticket extracted.
+[7/7] Following ticket to iCourse (via WebVPN)...
+    Status: 200
+    Verified: login OK
+[*] iCourse authentication successful!
+
+──────────────────────────────────────────────────
+[Course] 35846
+  Title: 人工智能 (Teacher: 陈智能)
+  Total lectures: 16 (11 with playback)
+  New/retry lectures: 1
+
+  -- Processing: 2026-05-22第6-8节 (2026-5-4)
+    [Time] Start: 2026-05-22 13:58:06
+    [Time] Fetching video URL at 13:58:06
+    Failed to get sub info for 616503: RuntimeError
+    No video URL for 616503, skipping.
+
+──────────────────────────────────────────────────
+[Course] 35652
+  Title: 数据库设计 (Teacher: 何震瀛)
+  Total lectures: 18 (12 with playback)
+  New/retry lectures: 1
+
+  -- Processing: 2026-05-21第6-8节 (2026-5-4)
+    [Time] Start: 2026-05-22 13:58:07
+    [Time] Fetching video URL at 13:58:07
+    [Time] Streaming audio at 13:58:09
+    [URL] https://webvpn.fudan.edu.cn/https/77726476706e69737468656265737421f9f44e8935236d1e781d8dad961b2631a5...
+[Transcriber] Loading SenseVoice model...
+[Transcriber] Model loaded.
+[Transcriber] Starting at 13:58:10
+[Transcriber] Progress: 1234s audio, 75.3 MB received, 1282.9 KB/s, 253 segments so far
+[Transcriber] Progress: 2787s audio, 170.1 MB received, 1449.8 KB/s, 666 segments so far
+[Transcriber] Progress: 4747s audio, 289.7 MB received, 1646.1 KB/s, 1071 segments so far
+[Transcriber] Progress: 6587s audio, 402.0 MB received, 1713.7 KB/s, 1507 segments so far
+[Transcriber] Progress: 8355s audio, 509.9 MB received, 1738.7 KB/s, 1921 segments so far
+[Transcriber] Progress: 9979s audio, 609.1 MB received, 1730.0 KB/s, 2347 segments so far
+[Transcriber] Media duration: 10083s (168.1min), received: 10083s (168.1min)
+[Transcriber] Done at 14:04:15: 10083s audio, 615.4 MB, avg 1725.0 KB/s, 36321 chars, 2357 segments in 365s
+    [Time] Generating summary at 14:04:15
+    Transcript length: 36321 chars
+[Summarizer] gemini/gemini-2.5-flash failed: InternalServerError: Error code: 503 - [{'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}]
+[Summarizer] Done (gemini-3-flash-preview): 36321 chars input → 3160 chars output in 24s
+    [OK] Summary by gemini/gemini-3-flash-preview: 3160 chars
+    [Time] Done at 14:04:51: 2026-05-21第6-8节 (total 403s)
+
+──────────────────────────────────────────────────
+[Course] 34646
+  Title: 大数据平台技术 (Teacher: 王鹏)
+  Total lectures: 16 (11 with playback)
+  New/retry lectures: 0
+  No new lectures, skipping.
+
+──────────────────────────────────────────────────
+[Course] 34166
+  Title: 学术英语（社会科学） (Teacher: 张颖)
+  Total lectures: 15 (12 with playback)
+  New/retry lectures: 0
+  No new lectures, skipping.
+
+──────────────────────────────────────────────────
+[Course] 33974
+  Title: 机器学习系统 (Teacher: 尚笠)
+  Total lectures: 16 (12 with playback)
+  New/retry lectures: 0
+  No new lectures, skipping.
+
+──────────────────────────────────────────────────
+[Course] 35125
+  Title: 马克思主义基本原理 (Teacher: 谌中和)
+  Total lectures: 17 (12 with playback)
+  New/retry lectures: 1
+
+  -- Processing: 2026-05-21第11-13节 (2026-5-4)
+    [Time] Start: 2026-05-22 14:05:01
+    [Time] Fetching video URL at 14:05:01
+    [Time] Streaming audio at 14:05:02
+    [URL] https://webvpn.fudan.edu.cn/https/77726476706e69737468656265737421f9f44e8935236d1e781d8dad961b2631a5...
+[Transcriber] Starting at 14:05:02
+[Transcriber] Progress: 1046s audio, 63.8 MB received, 1085.8 KB/s, 255 segments so far
+[Transcriber] Progress: 1996s audio, 121.8 MB received, 1037.3 KB/s, 559 segments so far
+[Transcriber] Progress: 2703s audio, 165.0 MB received, 937.1 KB/s, 789 segments so far
+[Transcriber] Progress: 4086s audio, 249.4 MB received, 1062.8 KB/s, 1105 segments so far
+[Transcriber] Progress: 5130s audio, 313.1 MB received, 1067.5 KB/s, 1453 segments so far
+[Transcriber] Progress: 6032s audio, 368.2 MB received, 1045.8 KB/s, 1691 segments so far
+[Transcriber] Progress: 7179s audio, 438.2 MB received, 1065.4 KB/s, 1790 segments so far
+[Transcriber] Progress: 8442s audio, 515.3 MB received, 1096.6 KB/s, 1997 segments so far
+[Transcriber] Media duration: 9841s (164.0min), received: 9841s (164.0min)
+[Transcriber] Done at 14:13:49: 9841s audio, 600.6 MB, avg 1167.9 KB/s, 30123 chars, 2016 segments in 527s
+    [Time] Generating summary at 14:13:49
+    Transcript length: 30123 chars
+[Summarizer] gemini/gemini-2.5-flash failed: InternalServerError: Error code: 503 - [{'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}]
+[Summarizer] Done (gemini-3-flash-preview): 30123 chars input → 2722 chars output in 35s
+    [OK] Summary by gemini/gemini-3-flash-preview: 2722 chars
+    [Time] Done at 14:15:20: 2026-05-21第11-13节 (total 619s)
+
+──────────────────────────────────────────────────
+[Course] 32913
+  Title: 计算机组成与体系结构 (Teacher: 张为华)
+  Total lectures: 64 (27 with playback)
+  [Dedup] Skipping duplicate: 2026-03-02第11-12节 (sub_id=561404)
+  [Dedup] Skipping duplicate: 2026-03-02第11-12节 (sub_id=561405)
+  [Dedup] Skipping duplicate: 2026-03-09第11-12节 (sub_id=566341)
+  [Dedup] Skipping duplicate: 2026-03-09第11-12节 (sub_id=566342)
+  [Dedup] Skipping duplicate: 2026-03-16第11-12节 (sub_id=571305)
+  [Dedup] Skipping duplicate: 2026-03-16第11-12节 (sub_id=571306)
+  [Dedup] Skipping duplicate: 2026-03-23第11-12节 (sub_id=575761)
+  [Dedup] Skipping duplicate: 2026-03-23第11-12节 (sub_id=575762)
+  [Dedup] Skipping duplicate: 2026-03-30第11-12节 (sub_id=580677)
+  [Dedup] Skipping duplicate: 2026-03-30第11-12节 (sub_id=580678)
+  [Dedup] Skipping duplicate: 2026-04-06第11-12节 (sub_id=585020)
+  [Dedup] Skipping duplicate: 2026-04-06第11-12节 (sub_id=585021)
+  [Dedup] Skipping duplicate: 2026-04-13第11-12节 (sub_id=589535)
+  [Dedup] Skipping duplicate: 2026-04-13第11-12节 (sub_id=589536)
+  [Dedup] Skipping duplicate: 2026-04-20第11-12节 (sub_id=595168)
+  [Dedup] Skipping duplicate: 2026-04-20第11-12节 (sub_id=595169)
+  [Dedup] Skipping duplicate: 2026-04-27第11-12节 (sub_id=599495)
+  [Dedup] Skipping duplicate: 2026-04-27第11-12节 (sub_id=599496)
+  [Dedup] Skipping duplicate: 2026-05-04第11-12节 (sub_id=603759)
+  [Dedup] Skipping duplicate: 2026-05-04第11-12节 (sub_id=603760)
+  [Dedup] Skipping duplicate: 2026-05-11第11-12节 (sub_id=608029)
+  [Dedup] Skipping duplicate: 2026-05-11第11-12节 (sub_id=608030)
+  [Dedup] Skipping duplicate: 2026-05-18第11-12节 (sub_id=612389)
+  [Dedup] Skipping duplicate: 2026-05-18第11-12节 (sub_id=612390)
+  [Dedup] Skipping duplicate: 2026-05-25第11-12节 (sub_id=617207)
+  [Dedup] Skipping duplicate: 2026-05-25第11-12节 (sub_id=617208)
+  [Dedup] Skipping duplicate: 2026-06-01第11-12节 (sub_id=621417)
+  [Dedup] Skipping duplicate: 2026-06-01第11-12节 (sub_id=621418)
+  [Dedup] Skipping duplicate: 2026-06-08第11-12节 (sub_id=625669)
+  [Dedup] Skipping duplicate: 2026-06-08第11-12节 (sub_id=625670)
+  [Dedup] Skipping duplicate: 2026-06-15第11-12节 (sub_id=630572)
+  [Dedup] Skipping duplicate: 2026-06-15第11-12节 (sub_id=630573)
+  New/retry lectures: 0
+  No new lectures, skipping.
+
+──────────────────────────────────────────────────
+[Course] 34964
+  Title: 多智能体系统及应用 (Teacher: 欧阳春)
+  Total lectures: 18 (11 with playback)
+  New/retry lectures: 0
+  No new lectures, skipping.
+
+──────────────────────────────────────────────────
+[Course] 33824
+  Title: 面向对象程序设计 (Teacher: 张天戈)
+  Total lectures: 48 (36 with playback)
+  [Dedup] Skipping duplicate: 2026-03-04第11-12节 (sub_id=563537)
+  [Dedup] Skipping duplicate: 2026-03-11第11-12节 (sub_id=568492)
+  [Dedup] Skipping duplicate: 2026-03-18第11-12节 (sub_id=573344)
+  [Dedup] Skipping duplicate: 2026-03-25第11-12节 (sub_id=577935)
+  [Dedup] Skipping duplicate: 2026-04-01第11-12节 (sub_id=582383)
+  [Dedup] Skipping duplicate: 2026-04-08第11-12节 (sub_id=586820)
+  [Dedup] Skipping duplicate: 2026-04-15第11-12节 (sub_id=591231)
+  [Dedup] Skipping duplicate: 2026-04-22第11-12节 (sub_id=596906)
+  [Dedup] Skipping duplicate: 2026-04-29第11-12节 (sub_id=601251)
+  [Dedup] Skipping duplicate: 2026-05-06第11-12节 (sub_id=605456)
+  [Dedup] Skipping duplicate: 2026-05-13第11-12节 (sub_id=609768)
+  [Dedup] Skipping duplicate: 2026-05-20第11-12节 (sub_id=613972)
+  [Dedup] Skipping duplicate: 2026-05-27第11-12节 (sub_id=618840)
+  [Dedup] Skipping duplicate: 2026-06-03第11-12节 (sub_id=623204)
+  [Dedup] Skipping duplicate: 2026-06-10第11-12节 (sub_id=627168)
+  [Dedup] Skipping duplicate: 2026-06-17第11-12节 (sub_id=632001)
+  New/retry lectures: 0
+  No new lectures, skipping.
+
+──────────────────────────────────────────────────
+[Course] 32890
+  Title: 软件工程 (Teacher: 沈立炜)
+  Total lectures: 32 (23 with playback)
+  New/retry lectures: 0
+  No new lectures, skipping.
+
+──────────────────────────────────────────────────
+[Course] 33299
+  Title: 科技人类学 (Teacher: 朱剑峰)
+  Total lectures: 16 (10 with playback)
+  New/retry lectures: 0
+  No new lectures, skipping.
+
+──────────────────────────────────────────────────
+[Course] 33951
+  Title: 政策系统动力学 (Teacher: 赵德余)
+  Total lectures: 16 (12 with playback)
+  New/retry lectures: 0
+  No new lectures, skipping.
+
+──────────────────────────────────────────────────
+[Course] 34005
+  Title: 社会分层与流动 (Teacher: 李煜)
+  Total lectures: 16 (12 with playback)
+  New/retry lectures: 0
+  No new lectures, skipping.
+
+──────────────────────────────────────────────────
+[Course] 34044
+  Title: 理解当代中国社会 (Teacher: 吴菲)
+  Total lectures: 16 (12 with playback)
+  New/retry lectures: 0
+  No new lectures, skipping.
+
+──────────────────────────────────────────────────
+[Course] 34825
+  Title: 社会资本与关系研究 (Teacher: 田丰)
+  Total lectures: 12 (12 with playback)
+  New/retry lectures: 0
+  No new lectures, skipping.
+
+──────────────────────────────────────────────────
+[Course] 34946
+  Title: 家庭社会学 (Teacher: 杜世超)
+  Total lectures: 17 (11 with playback)
+  New/retry lectures: 0
+  No new lectures, skipping.
+
+──────────────────────────────────────────────────
+[Course] 34260
+  Title: 知识论（H） (Teacher: 王聚)
+  Total lectures: 32 (24 with playback)
+  New/retry lectures: 0
+  No new lectures, skipping.
+
+──────────────────────────────────────────────────
+[Course] 32829
+  Title: 政治哲学 (Teacher: 鲁绍臣)
+  Total lectures: 16 (10 with playback)
+  New/retry lectures: 0
+  No new lectures, skipping.
+
+──────────────────────────────────────────────────
+[Course] 35892
+  Title: 技术哲学 (Teacher: 徐志宏)
+  Total lectures: 16 (11 with playback)
+  New/retry lectures: 1
+
+  -- Processing: 2026-05-22第4-5节 (2026-5-4)
+    [Time] Start: 2026-05-22 14:15:36
+    [Time] Fetching video URL at 14:15:36
+    Failed to get sub info for 616158: RuntimeError
+    No video URL for 616158, skipping.
+
+──────────────────────────────────────────────────
+[Course] 32833
+  Title: 当代社会学理论 (Teacher: 梅笑)
+  Total lectures: 16 (10 with playback)
+  New/retry lectures: 0
+  No new lectures, skipping.
+
+──────────────────────────────────────────────────
+[Course] 36144
+  Title: 教育社会学 (Teacher: 马莹)
+  Total lectures: 16 (11 with playback)
+  New/retry lectures: 1
+
+  -- Processing: 2026-05-22第6-7节 (2026-5-4)
+    [Time] Start: 2026-05-22 14:15:42
+    [Time] Fetching video URL at 14:15:42
+    Failed to get sub info for 616441: RuntimeError
+    No video URL for 616441, skipping.
+
+──────────────────────────────────────────────────
+[Course] 35920
+  Title: 社会科学数据挖掘 (Teacher: 周阳)
+  Total lectures: 14 (9 with playback)
+  New/retry lectures: 1
+
+  -- Processing: 2026-05-22第6-8节 (2026-5-4)
+    [Time] Start: 2026-05-22 14:15:44
+    [Time] Fetching video URL at 14:15:44
+    Failed to get sub info for 616243: RuntimeError
+    No video URL for 616243, skipping.
+
+──────────────────────────────────────────────────
+[Course] 35383
+  Title: 劳动经济学 (Teacher: 程远)
+  Total lectures: 18 (12 with playback)
+  New/retry lectures: 1
+
+  -- Processing: 2026-05-21第6-8节 (2026-5-4)
+    [Time] Start: 2026-05-22 14:15:46
+    [Time] Fetching video URL at 14:15:46
+    [Time] Streaming audio at 14:15:47
+    [URL] https://webvpn.fudan.edu.cn/https/77726476706e69737468656265737421f9f44e8935236d1e781d8dad961b2631a5...
+[Transcriber] Starting at 14:15:47
+[Transcriber] Media duration: 10062s (167.7min), received: 42s (0.7min)
+[Transcriber] Done at 14:16:14: 42s audio, 2.5 MB, avg 97.0 KB/s, 48 chars, 3 segments in 27s
+    [WARN] Attempt 1/3: Only received 42s of 10062s audio (0%). Connection may have dropped.
+    Retrying with fresh connection...
+[Transcriber] Starting at 14:16:15
+[Transcriber] Progress: 1052s audio, 64.2 MB received, 1094.5 KB/s, 136 segments so far
+[Transcriber] Progress: 2433s audio, 148.5 MB received, 1265.3 KB/s, 353 segments so far
+[Transcriber] Progress: 3878s audio, 236.7 MB received, 1345.2 KB/s, 536 segments so far
+[Transcriber] Progress: 5432s audio, 331.5 MB received, 1412.6 KB/s, 800 segments so far
+[Transcriber] Progress: 6756s audio, 412.4 MB received, 1403.0 KB/s, 1008 segments so far
+[Transcriber] Progress: 8185s audio, 499.6 MB received, 1414.1 KB/s, 1221 segments so far
+[Transcriber] Media duration: 10062s (167.7min), received: 10062s (167.7min)
+[Transcriber] Done at 14:23:04: 10062s audio, 614.1 MB, avg 1537.2 KB/s, 39982 chars, 1341 segments in 409s
+    [Time] Generating summary at 14:23:04
+    Transcript length: 39982 chars
+[Summarizer] gemini/gemini-2.5-flash failed: InternalServerError: Error code: 503 - [{'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}]
+[Summarizer] Done (gemini-3-flash-preview): 39982 chars input → 3400 chars output in 26s
+    [OK] Summary by gemini/gemini-3-flash-preview: 3400 chars
+    [Time] Done at 14:23:59: 2026-05-21第6-8节 (total 493s)
+
+──────────────────────────────────────────────────
+[Course] 33969
+  Title: 统计分析进阶 (Teacher: 吴菲)
+  Total lectures: 16 (12 with playback)
+  New/retry lectures: 0
+  No new lectures, skipping.
+
+──────────────────────────────────────────────────
+[Course] 33808
+  Title: 发展政治学 (Teacher: 曾庆捷)
+  Total lectures: 16 (12 with playback)
+  New/retry lectures: 0
+  No new lectures, skipping.
+
+──────────────────────────────────────────────────
+[Course] 33720
+  Title: 高级政治经济学 (Teacher: 汪立鑫)
+  Total lectures: 32 (24 with playback)
+  [Dedup] Skipping duplicate: 2026-03-03第3-5节 (sub_id=562377)
+  [Dedup] Skipping duplicate: 2026-03-10第3-5节 (sub_id=567152)
+  [Dedup] Skipping duplicate: 2026-03-17第3-5节 (sub_id=571967)
+  [Dedup] Skipping duplicate: 2026-03-24第3-5节 (sub_id=577285)
+  [Dedup] Skipping duplicate: 2026-03-31第3-5节 (sub_id=581705)
+  [Dedup] Skipping duplicate: 2026-04-07第3-5节 (sub_id=586190)
+  [Dedup] Skipping duplicate: 2026-04-14第3-5节 (sub_id=590647)
+  [Dedup] Skipping duplicate: 2026-04-21第3-5节 (sub_id=595228)
+  [Dedup] Skipping duplicate: 2026-04-28第3-5节 (sub_id=600115)
+  [Dedup] Skipping duplicate: 2026-05-09第3-5节 (sub_id=604395)
+  [Dedup] Skipping duplicate: 2026-05-12第3-5节 (sub_id=608685)
+  [Dedup] Skipping duplicate: 2026-05-19第3-5节 (sub_id=613852)
+  [Dedup] Skipping duplicate: 2026-05-26第3-5节 (sub_id=618207)
+  [Dedup] Skipping duplicate: 2026-06-02第3-5节 (sub_id=622566)
+  [Dedup] Skipping duplicate: 2026-06-09第3-5节 (sub_id=626656)
+  [Dedup] Skipping duplicate: 2026-06-16第3-5节 (sub_id=630630)
+  New/retry lectures: 0
+  No new lectures, skipping.
+
+──────────────────────────────────────────────────
+[Course] 33828
+  Title: 比较政治学前沿理论 (Teacher: 郭定平)
+  Total lectures: 3 (3 with playback)
+  New/retry lectures: 0
+  No new lectures, skipping.
+
+──────────────────────────────────────────────────
+[Course] 36252
+  Title: 政治修辞学 (Teacher: 吴礼权)
+  Total lectures: 16 (11 with playback)
+  New/retry lectures: 1
+
+  -- Processing: 2026-05-22第6-7节 (2026-5-4)
+    [Time] Start: 2026-05-22 14:24:06
+    [Time] Fetching video URL at 14:24:06
+    Failed to get sub info for 616222: RuntimeError
+    No video URL for 616222, skipping.
+
+──────────────────────────────────────────────────
+[Course] 36256
+  Title: 语言哲学 (Teacher: 张新华)
+  Total lectures: 16 (11 with playback)
+  New/retry lectures: 1
+
+  -- Processing: 2026-05-22第8-9节 (2026-5-4)
+    [Time] Start: 2026-05-22 14:24:09
+    [Time] Fetching video URL at 14:24:09
+    Failed to get sub info for 616226: RuntimeError
+    No video URL for 616226, skipping.
+
+──────────────────────────────────────────────────
+[Course] 36117
+  Title: 运筹学基础 (Teacher: 杨卫红)
+  Total lectures: 12 (11 with playback)
+  New/retry lectures: 1
+
+  -- Processing: 2026-05-22第6-8节 (2026-5-4)
+    [Time] Start: 2026-05-22 14:24:12
+    [Time] Fetching video URL at 14:24:12
+    Failed to get sub info for 616035: RuntimeError
+    No video URL for 616035, skipping.
+[Email] Including 3 previously unsent lecture(s).
+
+[Email] Sending summary for 3 lecture(s)...
+[Emailer] Embedded 30 LaTeX images as CID
+[Emailer] Sent: [FiCS] 数据库设计 (1), 马克思主义基本原理 (1), 劳动经济学 (1)
+
+============================================================
+Run complete.
+##[group]Run if [ ! -f data/icourse.db ]; then
+if [ ! -f data/icourse.db ]; then
+  echo "No database file, skipping."
+  exit 0
+fi
+
+AFTER=$(md5sum data/icourse.db | cut -d' ' -f1)
+if [ "$AFTER" = "9f3b1ac5851d326245a24cc5d68971a9" ]; then
+  echo "Database unchanged, skipping commit."
+  exit 0
+fi
+
+# Re-fetch latest remote DB (may have been updated by concurrent workflow)
+DEPLOY_DB=data/icourse.db
+git fetch origin data --depth=1 2>/dev/null || echo "No data branch yet."
+if git rev-parse origin/data >/dev/null 2>&1; then
+  # Try new compressed format, then legacy
+  git show origin/data:data/icourse.db.gz.enc > data/remote.gz.enc 2>/dev/null || true
+  git show origin/data:data/icourse.db.enc > data/remote.enc 2>/dev/null || true
+  # Remove empty files from failed git show
+  find data -name 'remote.*' -empty -delete 2>/dev/null || true
+  if [ -s data/remote.gz.enc ] && \
+     openssl enc -aes-256-cbc -d -pbkdf2 \
+       -in data/remote.gz.enc -out data/remote.db.gz \
+       -pass env:DB_KEY 2>/dev/null && \
+     gzip -d data/remote.db.gz; then
+    echo "Merging local changes into latest remote database..."
+    python scripts/merge_db.py data/icourse.db data/remote.db
+    DEPLOY_DB=data/remote.db
+  elif [ -s data/remote.enc ] && \
+     openssl enc -aes-256-cbc -d -pbkdf2 \
+       -in data/remote.enc -out data/remote.db \
+       -pass env:DB_KEY 2>/dev/null; then
+    echo "Merging local changes into latest remote database (legacy)..."
+    python scripts/merge_db.py data/icourse.db data/remote.db
+    DEPLOY_DB=data/remote.db
+  fi
+fi
+
+# Compress then encrypt (new format)
+gzip -c "$DEPLOY_DB" > data/icourse.db.gz
+openssl enc -aes-256-cbc -salt -pbkdf2 \
+  -in data/icourse.db.gz -out data/icourse.db.gz.enc \
+  -pass env:DB_KEY
+
+echo "Deploying to data branch..."
+mkdir -p /tmp/db_deploy/data
+cp data/icourse.db.gz.enc /tmp/db_deploy/data/
+cd /tmp/db_deploy
+
+git init
+git checkout -b data
+git config user.name "github-actions[bot]"
+git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+git add data/icourse.db.gz.enc
+git commit -m "chore: update encrypted database"
+git push --force "https://LeafCreeper:${GITHUB_TOKEN}@github.com/LeafCreeper/Fudan_iCourse_Subscriber.git" data
+shell: /usr/bin/bash -e {0}
+env:
+  pythonLocation: /opt/hostedtoolcache/Python/3.12.13/x64
+  PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.13/x64/lib/pkgconfig
+  Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+  Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+  Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.13/x64
+  LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.13/x64/lib
+  DB_KEY: ***
+  GITHUB_TOKEN: ***
+##[endgroup]
+Merging local changes into latest remote database...
+Merge complete.
+Deploying to data branch...
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: will change to "main" in Git 3.0. To configure the initial branch name
+hint: to use in all of your new repositories, which will suppress this warning,
+hint: call:
+hint:
+hint: 	git config --global init.defaultBranch <name>
+hint:
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint:
+hint: 	git branch -m <name>
+hint:
+hint: Disable this message with "git config set advice.defaultBranchName false"
+Initialized empty Git repository in /tmp/db_deploy/.git/
+Switched to a new branch 'data'
+[data (root-commit) 3f04d3a] chore: update encrypted database
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 data/icourse.db.gz.enc
+To https://github.com/LeafCreeper/Fudan_iCourse_Subscriber.git
+ + a74a274...3f04d3a data -> data (forced update)
+Post job cleanup.
+Cache hit occurred on the primary key asr-models-sensevoice-2024-07-17, not saving cache.
+Post job cleanup.
+Cache hit occurred on the primary key pip-1366df7dbe36a7f0a511949b17e099a068821957b7b1025e52f36e8879f77fa1, not saving cache.
+Post job cleanup.
+Post job cleanup.
+[command]/usr/bin/git version
+git version 2.54.0
+Temporarily overriding HOME='/home/runner/work/_temp/12572fdc-83f8-45a3-afb8-5d17cb7f3b7a' before making global git config changes
+Adding repository directory to the temporary git global config as a safe directory
+[command]/usr/bin/git config --global --add safe.directory /home/runner/work/Fudan_iCourse_Subscriber/Fudan_iCourse_Subscriber
+[command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+[command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+[command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+http.https://github.com/.extraheader
+[command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+[command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+[command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+[command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Cleaning up orphan processes
+##[warning]Node.js 20 actions are deprecated. The following actions are running on Node.js 20 and may not work as expected: actions/cache@v4, actions/checkout@v4, actions/setup-python@v5. Actions will be forced to run with Node.js 24 by default starting June 2nd, 2026. Node.js 20 will be removed from the runner on September 16th, 2026. Please check if updated versions of these actions are available that support Node.js 24. To opt into Node.js 24 now, set the FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true environment variable on the runner or in your workflow file. Once Node.js 24 becomes the default, you can temporarily opt out by setting ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

@@ -198,6 +198,11 @@ class PPTPipeline:
         # Stage 4 — submit OCR jobs.  ``submit_ocr`` wraps the worker in
         # the dynamic semaphore so live concurrency stays at the current
         # ResourceMonitor target even if the pool itself is bigger.
+        ocr_count = sum(
+            1 for page_num in images if page_num not in dropped_pages
+        )
+        if self._reporter and ocr_count:
+            self._reporter.ocr_progress_start(sub_id, ocr_count)
         futures: list[Future] = []
         for page_num, img in images.items():
             if page_num in dropped_pages:
@@ -235,6 +240,11 @@ class PPTPipeline:
         Runs in the OCR pool (gated by the dynamic semaphore).  Database
         writes go through ``Database._lock`` so concurrent workers don't
         race on the same row.
+
+        The reporter tick fires for every outcome (done/invalid/failed) so
+        the printed page/s reflects total OCR throughput, not just
+        successful pages — otherwise a run with many "invalid" classroom
+        screens would look artificially slow.
         """
         try:
             text = ocr_image_text(image_bytes)
@@ -242,7 +252,11 @@ class PPTPipeline:
             print(f"      page {page_num}: OCR error "
                   f"{type(e).__name__}: {e}", flush=True)
             self._db.update_ppt_page(sub_id, page_num, None, "failed")
+            if self._reporter:
+                self._reporter.ocr_progress_tick(sub_id)
             return page_num, "failed"
         status = "invalid" if is_invalid_page(text) else "done"
         self._db.update_ppt_page(sub_id, page_num, text, status)
+        if self._reporter:
+            self._reporter.ocr_progress_tick(sub_id)
         return page_num, status

@@ -81,10 +81,15 @@ class Transcriber:
                 )
 
         print(f"[Transcriber] Loading FireRed ASR2 CTC model from {model_path}...")
+        # num_threads=4 so ASR can use all CPU cores when no OCR work is
+        # active.  When the LectureRunner's ASR phase coincides with a PPT
+        # OCR phase, the Scheduler caps OCR concurrency (see
+        # ``set_asr_active``) so the two workloads time-share predictably
+        # instead of fighting for cycles via OS round-robin alone.
         self._recognizer = sherpa_onnx.OfflineRecognizer.from_fire_red_asr_ctc(
             model=model_path,
             tokens=tokens_path,
-            num_threads=2,
+            num_threads=4,
             debug=False,
         )
 

@@ -29,12 +29,17 @@ class Reporter:
 
     # ── Throttling cadences ──
     IMAGE_PROGRESS_EVERY_PICS = 30  # emit a line every 30 finished images
+    OCR_PROGRESS_EVERY_PAGES = 20   # emit a line every 20 OCR'd pages
     CPU_SNAPSHOT_INTERVAL_SEC = 60.0  # emit a snapshot at most every 60 s
 
     def __init__(self):
         self._lock = threading.Lock()
         # sub_id -> (last_done_emitted_at_count, t0, last_print_t)
         self._image_progress_state: dict[str, dict] = {}
+        # Mirror state for OCR completions. Keyed by sub_id because the
+        # prefetch pipeline may have multiple lectures' OCR in flight at
+        # once (next lecture's PPT primes while current lecture's ASR runs).
+        self._ocr_progress_state: dict[str, dict] = {}
         self._last_cpu_snapshot_t: float = 0.0
 
     # ── Lifecycle ────────────────────────────────────────────────────────
@@ -162,6 +167,62 @@ class Reporter:
     def image_progress_abort(self, sub_id: str):
         with self._lock:
             self._image_progress_state.pop(sub_id, None)
+
+    # ── OCR-completion progress (throttled every OCR_PROGRESS_EVERY_PAGES) ──
+    #
+    # Lifecycle mirrors image_progress_*: caller registers a total at start,
+    # ticks once per finished page, and the line is emitted every N pages
+    # plus once at completion. We track per-sub_id because the prefetch
+    # pipeline may submit the next lecture's OCR work before this lecture's
+    # OCR drains, so two streams can overlap.
+    #
+    # Distinction from cpu_snapshot's "OCR busy/target/max": those numbers
+    # are *pool occupancy* (how many slots are in flight right now). This
+    # one is *throughput* (pages OCR'd per second).  Both useful, neither
+    # substitutes for the other — the snapshot answered "did the
+    # ResourceMonitor steer OCR concurrency?", this answers "how fast is
+    # OCR actually finishing pages?".
+
+    def ocr_progress_start(self, sub_id: str, total: int):
+        """Record t0 for a sub_id's OCR phase so page/s can be computed."""
+        with self._lock:
+            self._ocr_progress_state[sub_id] = {
+                "total": total,
+                "done": 0,
+                "t0": time.time(),
+                "last_emit_at_count": 0,
+            }
+
+    def ocr_progress_tick(self, sub_id: str):
+        """Call once per finished OCR page.  Emits every N pages and at end.
+
+        Cheap and lock-free for the not-tracked case so OCR workers that
+        run from contexts without a registered start (e.g. resummarize
+        path that doesn't pre-count) don't pay any cost.
+        """
+        with self._lock:
+            st = self._ocr_progress_state.get(sub_id)
+            if st is None:
+                return
+            st["done"] += 1
+            done = st["done"]
+            total = st["total"]
+            is_final = (done >= total)
+            cross = (done - st["last_emit_at_count"]) >= self.OCR_PROGRESS_EVERY_PAGES
+            if not (cross or is_final):
+                return
+            st["last_emit_at_count"] = done
+            elapsed = max(time.time() - st["t0"], 0.001)
+            rate = done / elapsed
+            bar = self._bar(done, total)
+            print(f"    [OCR {sub_id}] {bar} {done}/{total} "
+                  f"({rate:.2f} page/s)", flush=True)
+            if is_final:
+                self._ocr_progress_state.pop(sub_id, None)
+
+    def ocr_progress_abort(self, sub_id: str):
+        with self._lock:
+            self._ocr_progress_state.pop(sub_id, None)
 
     @staticmethod
     def _bar(done: int, total: int, width: int = 20) -> str:

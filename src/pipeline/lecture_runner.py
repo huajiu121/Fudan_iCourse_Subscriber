@@ -193,9 +193,17 @@ class LectureRunner:
             return None, None
 
         try:
-            transcript, segments = self._transcriber.transcribe_tail(
-                handle.path, handle.process, handle.stderr_chunks,
-            )
+            self._scheduler.set_asr_active(True)
+            try:
+                transcript, segments = self._transcriber.transcribe_tail(
+                    handle.path, handle.process, handle.stderr_chunks,
+                )
+            finally:
+                # Always release the OCR concurrency cap, even on
+                # NoAudioStreamError / IncompleteAudioError / generic
+                # failure — otherwise a single ASR exception would leave
+                # OCR throttled at half-cores for the remainder of the run.
+                self._scheduler.set_asr_active(False)
         except NoAudioStreamError as e:
             self._reporter.info(f"    [SKIP] Video-only (no audio stream): {e}")
             self._db.update_error(sub_id, "transcribe", str(e))
@@ -279,14 +287,16 @@ def resummarize_old_lectures(client: "ICourseClient", db: "Database",
     reporter.resummarize_header(len(targets))
 
     seen_sub_ids = {item["sub_id"] for item in email_items}
-    for row in targets:
+    for idx, row in enumerate(targets, 1):
         sub_id = str(row["sub_id"])
         course_id = row["course_id"]
         sub_title = row.get("sub_title", sub_id)
         course_title = row.get("course_title", "Unknown")
         date = row.get("date", "")
+        t_lec = time.time()
         try:
             reporter.resummarize_one(course_title, sub_title)
+            reporter.info(f"    [Resummarize] {idx}/{len(targets)}")
             if check_session_fn:
                 check_session_fn(client)
             try:
@@ -316,6 +326,7 @@ def resummarize_old_lectures(client: "ICourseClient", db: "Database",
             db.reset_emailed(sub_id)
             reporter.info(
                 f"    [OK] v2 summary by {model_used}: {len(summary)} chars"
+                f"  (lecture total {time.time()-t_lec:.0f}s)"
             )
 
             if sub_id in seen_sub_ids:

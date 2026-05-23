@@ -142,6 +142,14 @@ OCR_MAX_WORKERS = int(os.environ.get("OCR_MAX_WORKERS", "8"))
 OCR_INITIAL_TARGET = int(os.environ.get("OCR_INITIAL_TARGET", "3"))
 OCR_MIN_TARGET = int(os.environ.get("OCR_MIN_TARGET", "1"))
 OCR_MAX_TARGET = int(os.environ.get("OCR_MAX_TARGET", "8"))
+# When the LectureRunner is mid-ASR, the OCR pool's effective max target
+# drops to this value so the ASR thread block (now num_threads=4) doesn't
+# contend with a saturated OCR pool.  Workload split: ASR gets ~2 effective
+# cores, OCR gets ~2.  Outside ASR phases (resummarize, between lectures)
+# OCR is allowed to ramp up to OCR_MAX_TARGET again.
+OCR_MAX_TARGET_WHEN_ASR_ACTIVE = int(
+    os.environ.get("OCR_MAX_TARGET_WHEN_ASR_ACTIVE", "2")
+)
 # ResourceMonitor thresholds (percent CPU). Outside [LOW, HIGH] we adjust
 # OCR target down/up by 1 each second.
 RESOURCE_MONITOR_CPU_HIGH = int(os.environ.get("RESOURCE_MONITOR_CPU_HIGH", "95"))
