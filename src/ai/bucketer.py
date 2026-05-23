@@ -14,6 +14,8 @@ from __future__ import annotations
 import json
 from collections import defaultdict
 
+from src.ai.ppt_dedup import clean_ppt_text
+
 BUCKET_SIZE_SEC = 600  # 10 minutes
 
 
@@ -67,7 +69,7 @@ def assemble_bucketed(
                 ts = _format_timestamp(int(p["created_sec"]))
                 page_num = p.get("page_num", "")
                 tag = f"[页 {page_num} @ {ts}]" if page_num else f"[@ {ts}]"
-                text = (p.get("text") or "").strip()
+                text = clean_ppt_text(p.get("text") or "").strip()
                 if text:
                     out.append(f"{tag}\n{text}")
             out.append("")
