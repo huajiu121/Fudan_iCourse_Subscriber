@@ -161,6 +161,14 @@ VIDEO_DOWNLOAD_CONCURRENCY = int(
     os.environ.get("VIDEO_DOWNLOAD_CONCURRENCY", "2")
 )
 
+# Resummarize phase opt-in.  Re-running OCR + LLM on every old lecture is
+# expensive (each lecture ~ a minute of LLM + 30 OCR calls); we don't want
+# every nightly run paying that cost.  Set RESUMMARIZE_OLD=1 to enable for
+# a one-shot manual workflow run.  Default off.
+RESUMMARIZE_OLD_ENABLED = os.environ.get("RESUMMARIZE_OLD", "").strip() in (
+    "1", "true", "yes", "on",
+)
+
 # 监控的课程 ID 列表
 COURSE_IDS = [
     c.strip()
