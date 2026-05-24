@@ -50,7 +50,7 @@ def _hamming_hex(a: str, b: str) -> int:
 
 def dedup_dhash(
     items: list[str | None],
-    window: int = 5,
+    window: int = 10,
     threshold: int = 2,
 ) -> list[int]:
     """Sliding-window perceptual dedup. Returns sorted list of dropped indices.
@@ -250,8 +250,7 @@ _UI_NOISE_LINE_RES: list[re.Pattern] = [
     re.compile(r"^[A-Z][a-z]+\d{1,2},\s*\d{4}$"),       # e.g. "May29,2025"
     re.compile(r"^First Pa\.\.$"),                       # truncated "First Page"
     re.compile(r"^AbstractJAbs?tra\.+$"),                # truncated abstracts
-    re.compile(r"^AuthorJCompact$"),                     # Word metadata
-    re.compile(r"^YangZhou.*$"),                         # author name in isolation
+    re.compile(r"^AuthorJCompact$"),                     # Word metadata                      # author name in isolation
     re.compile(r"^Uabexx²+$"),                           # formula OCR noise
     re.compile(r"^[A-Z]\.$"),                            # single initial like "A."
     re.compile(r"^[A-Z][a-z]+University\)?$"),           # e.g. "FudanUniversity)"
