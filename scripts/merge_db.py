@@ -98,8 +98,8 @@ def merge(local_path: str, remote_path: str):
             # 4) PPT pages: insert local-only rows
             conn.execute("""
                 INSERT OR IGNORE INTO main.ppt_pages
-                    (sub_id, page_num, created_sec, pptimgurl, text, ocr_status, ocr_at)
-                SELECT sub_id, page_num, created_sec, pptimgurl, text, ocr_status, ocr_at
+                    (sub_id, page_num, created_sec, pptimgurl, text, ocr_status, ocr_at, dhash)
+                SELECT sub_id, page_num, created_sec, pptimgurl, text, ocr_status, ocr_at, dhash
                 FROM local.ppt_pages
             """)
 
@@ -119,7 +119,8 @@ def merge(local_path: str, remote_path: str):
                     END,
                     ocr_at = COALESCE(l.ocr_at, main.ppt_pages.ocr_at),
                     created_sec = COALESCE(l.created_sec, main.ppt_pages.created_sec),
-                    pptimgurl = COALESCE(l.pptimgurl, main.ppt_pages.pptimgurl)
+                    pptimgurl = COALESCE(l.pptimgurl, main.ppt_pages.pptimgurl),
+                    dhash = COALESCE(l.dhash, main.ppt_pages.dhash)
                 FROM local.ppt_pages l
                 WHERE main.ppt_pages.sub_id = l.sub_id
                   AND main.ppt_pages.page_num = l.page_num

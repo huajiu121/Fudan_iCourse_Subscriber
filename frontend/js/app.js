@@ -453,11 +453,9 @@ document.addEventListener("alpine:init", () => {
       this.exportingPdf = true;
       try {
         const subIds = selected.map((lec) => String(lec.sub_id)).join(",");
-        // Workflow files live on the default branch (main).  Surfaced as a
-        // hardcoded "main" for now; expose as a setting if users rename it.
         await ICS.github.triggerExportWorkflow(
           this.repoOwner, this.repoName, "main", creds.token,
-          this.currentCourse.course_id, true, subIds
+          this.currentCourse.course_id, "PDF", subIds
         );
         this.exportDialogOpen = false;
         this._toast(
@@ -468,6 +466,50 @@ document.addEventListener("alpine:init", () => {
         this._toast(e?.message || "Export failed", "error");
       } finally {
         this.exportingPdf = false;
+      }
+    },
+
+    async exportSelectedToClipboard() {
+      // Client-side markdown export: concatenate transcript + summary
+      // for selected lectures and copy to clipboard.  No server needed.
+      var selected = this.getExportableLectures().filter(
+        function (lec) { return this.exportSelection[lec.sub_id]; }, this
+      );
+      if (!selected.length) {
+        this._toast("请至少选择一节课程", "error");
+        return;
+      }
+      var lines = [
+        "# " + (this.currentCourse?.title || "课程摘要"),
+        "",
+      ];
+      for (var i = 0; i < selected.length; i++) {
+        var lec = selected[i];
+        lines.push("## " + (lec.sub_title || "Untitled") + "（" + (lec.date || "") + "）");
+        lines.push("");
+        if (lec.summary) {
+          lines.push("### 摘要");
+          lines.push("");
+          lines.push(lec.summary);
+          lines.push("");
+        }
+        if (lec.transcript) {
+          lines.push("### 转录文本");
+          lines.push("");
+          lines.push(lec.transcript);
+          lines.push("");
+        }
+        lines.push("---");
+        lines.push("");
+      }
+      try {
+        await navigator.clipboard.writeText(lines.join("\n"));
+        this._toast(
+          "已复制 " + selected.length + " 节课的 Markdown 到剪贴板",
+          "success"
+        );
+      } catch (e) {
+        this._toast("复制失败：" + (e?.message || "unknown"), "error");
       }
     },
 

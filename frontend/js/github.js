@@ -294,7 +294,7 @@ async function _triggerCheckWorkflow(owner, repo, ref, token) {
 }
 
 async function _triggerExportWorkflow(
-  owner, repo, ref, token, courseId, exportPdf, subIds
+  owner, repo, ref, token, courseId, exportType, subIds
 ) {
   // Fires the existing .github/workflows/export.yml workflow_dispatch.
   // The workflow runs scripts/export_course.py (WeasyPrint) and emails
@@ -307,7 +307,7 @@ async function _triggerExportWorkflow(
     ref,
     inputs: {
       course_id: String(courseId),
-      export_pdf: !!exportPdf,
+      export_type: exportType || "PDF",
       sub_ids: subIds || "",
     },
   };
