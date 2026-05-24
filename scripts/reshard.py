@@ -42,7 +42,8 @@ from src.data.sharder import (
 from src.data import crypto_box
 
 # ── Config ─────────────────────────────────────────────────────────────────
-SHARD_TARGET_COMPRESSED = 5 * 1024 * 1024  # 5 MB per shard (compressed)
+STABLE_SHARD_TARGET_COMPRESSED = 5 * 1024 * 1024  # 5 MB per stable shard
+ACTIVE_SHARD_TARGET_COMPRESSED = 3 * 1024 * 1024  # 3 MB per active shard
 ACTIVE_WINDOW_DAYS = 14  # lectures updated within this window → "active"
 
 
@@ -141,43 +142,40 @@ def main():
         print(f"Stable courses: {len(stable)} ({sum(c['size'] for c in stable)/1024:.0f}KB)")
 
     # ── Step 2: Group into shards ─────────────────────────────────────────
-    target_uncompressed = SHARD_TARGET_COMPRESSED * COMPRESSION_RATIO_GUESS
     groups: list[list[str]] = []
 
-    def _flush(group: list[str], current_size: int) -> None:
-        if group:
-            groups.append(list(group))
+    def _pack(courses: list[dict], target: int) -> list[list[str]]:
+        """First-fit pack course_ids into shards at most ``target`` bytes.
+        A course exceeding the target gets its own shard (never split)."""
+        result: list[list[str]] = []
+        remaining = list(courses)
+        while remaining:
+            group: list[str] = []
+            group_size = 0
+            for c in list(remaining):
+                sz = c["size"]
+                if group_size + sz <= target:
+                    group.append(c["course_id"])
+                    group_size += sz
+                    remaining.remove(c)
+                # Single oversized course → own shard (loop will pick it up
+                # on next iteration when group is empty).
+            result.append(group)
+        return result
 
-    # Group 1: each active course → its own shard (if big) or grouped with
-    # other active courses
-    active_remaining = list(active)
-    while active_remaining:
-        group: list[str] = []
-        group_size = 0
-        while active_remaining:
-            c = active_remaining[0]
-            sz = c["size"]
-            if group and group_size + sz > target_uncompressed:
-                break
-            group.append(c["course_id"])
-            group_size += sz
-            active_remaining.pop(0)
-        _flush(group, group_size)
+    # Active courses → 3 MB shards (they change frequently, small shards
+    # minimize update payload).
+    active_target = ACTIVE_SHARD_TARGET_COMPRESSED * COMPRESSION_RATIO_GUESS
+    for g in _pack(active, active_target):
+        if g:
+            groups.append(g)
 
-    # Group 2: pack stable courses with first-fit
-    remaining = list(stable)
-    while remaining:
-        group: list[str] = []
-        group_size = 0
-        for c in list(remaining):
-            sz = c["size"]
-            if group_size + sz <= target_uncompressed:
-                group.append(c["course_id"])
-                group_size += sz
-                remaining.remove(c)
-            # If a single course exceeds the target, it still gets its own
-            # shard (courses are never split)
-        _flush(group, group_size)
+    # Stable courses → 5 MB shards (they never change, larger shards mean
+    # fewer files with stable hashes).
+    stable_target = STABLE_SHARD_TARGET_COMPRESSED * COMPRESSION_RATIO_GUESS
+    for g in _pack(stable, stable_target):
+        if g:
+            groups.append(g)
 
     if not groups:
         groups = [[]]  # at least one (empty) shard
