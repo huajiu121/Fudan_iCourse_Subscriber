@@ -182,6 +182,11 @@ class PPTPipeline:
         # run that aren't in the current prefetch.  Re-download those in
         # the main thread (rare path, kept simple).
         pending = self._db.get_pending_ppt_pages(sub_id)
+        # If pages already have dhash (prefetch_and_ocr submitted them in
+        # the previous lecture's LLM phase), skip re-processing here.
+        already_ocr_in_flight = any(p.get("dhash") for p in pending)
+        if already_ocr_in_flight:
+            pending = []
         presubmit_failed = 0
         for p in pending:
             page_num = p["page_num"]
@@ -243,6 +248,64 @@ class PPTPipeline:
             presubmit_failed=presubmit_failed,
             images=keep_images or None,
         )
+
+    def prefetch_and_ocr(self, client: "ICourseClient", course_id: str,
+                          sub_id: str) -> None:
+        """Download images + dedup + submit OCR for a lecture, but DON'T
+        drain or discard the prefetch cache.
+
+        Designed to be called during the LLM wait of the *previous* lecture.
+        OCR runs in the background pool while the API call is in flight.
+        The subsequent ``submit()`` call for this lecture will find the
+        already-OCR'd pages in the DB and skip redundant work.
+
+        The prefetch cache is intentionally NOT discarded here — the
+        real ``submit()`` call in Phase B of the next lecture handles that.
+        """
+        sub_id = str(sub_id)
+        self._scheduler.image_cache.schedule(client, course_id, sub_id)
+        ppt_items, images = self._scheduler.image_cache.wait(sub_id)
+
+        if ppt_items:
+            self._db.insert_ppt_pages_pending(sub_id, ppt_items)
+
+        pending = self._db.get_pending_ppt_pages(sub_id)
+        if not pending:
+            return
+
+        # Re-fetch any images not in the prefetch cache
+        for p in pending:
+            pn = p["page_num"]
+            if pn in images:
+                continue
+            img = icourse.fetch_ppt_image(client, p)
+            if img:
+                images[pn] = img
+
+        # Dedup
+        dhashes: list[str | None] = []
+        indices: list[int] = []
+        for p in pending:
+            pn = p["page_num"]
+            img = images.get(pn)
+            if img is None:
+                continue
+            dh = compute_dhash(img)
+            self._db.update_ppt_page_dhash(sub_id, pn, dh)
+            dhashes.append(dh)
+            indices.append(pn)
+
+        dropped = {indices[i] for i in dedup_dhash(dhashes)}
+        for pn in dropped:
+            self._db.update_ppt_page(sub_id, pn, None, "dedup_dropped")
+            images.pop(pn, None)
+
+        # Submit OCR
+        ocr_pages = {pn: img for pn, img in images.items() if pn not in dropped}
+        if self._reporter and ocr_pages:
+            self._reporter.ocr_progress_start(sub_id, len(ocr_pages))
+        for pn, img in ocr_pages.items():
+            self._scheduler.submit_ocr(self._ocr_worker, sub_id, pn, img)
 
     def run_blocking(self, client: "ICourseClient", course_id: str,
                      sub_id: str) -> PPTStats:
