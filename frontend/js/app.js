@@ -621,12 +621,9 @@ document.addEventListener("alpine:init", () => {
     },
     // ── Load courses for selected terms (not all 20k) ──────────────
     _loadCoursesForTerms() {
-      // Only load the user-selected term(s).  If none selected, load
-      // the 2 most recent terms to keep the DOM responsive (~5-10k
-      // courses is manageable; 20k+ causes multi-second freezes).
       var terms = this.subsTerms.length
         ? this.subsTerms
-        : this.allCoursesTerms.slice(0, 2);
+        : this.allCoursesTerms;
       var all = [];
       for (var i = 0; i < terms.length; i++) {
         var rows = ICS.db.getAllCourses(terms[i]);
