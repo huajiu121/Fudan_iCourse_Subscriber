@@ -607,19 +607,16 @@ document.addEventListener("alpine:init", () => {
       this.subsSelMiddle = [];
       this.subsSelRight = [];
       this.subsError = "";
-      // Load current subscription from localStorage (cached last-saved state)
-      var current = [];
+      // Load current subscription from localStorage (last-saved secret state).
+      // The ``courses`` table is NOT a valid fallback — it holds every course
+      // that has ever been processed, not just the currently subscribed ones.
+      this.subscribedIds = [];
       try {
         var cached = JSON.parse(
           localStorage.getItem(_LS + "lastSubscribed") || "null"
         );
-        if (Array.isArray(cached)) current = cached.map(String);
+        if (Array.isArray(cached)) this.subscribedIds = cached.map(String);
       } catch {}
-      // Fallback: if no cache, use the courses table as signal
-      if (!current.length) {
-        current = ICS.db.getSubscribedCourseIds().map(String);
-      }
-      this.subscribedIds = current;
       this.rebuildSubsFiltered();
       this.navigate("subscriptions");
     },
