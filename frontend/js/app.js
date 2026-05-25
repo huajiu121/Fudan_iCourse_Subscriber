@@ -634,6 +634,21 @@ document.addEventListener("alpine:init", () => {
       this.allCourses = all;
       this.rebuildSubsFiltered();
     },
+    // ── Term badge color (cyclic palette for the search results) ─────
+    _TERM_COLORS: [
+      "bg-blue-100 text-blue-700",
+      "bg-emerald-100 text-emerald-700",
+      "bg-purple-100 text-purple-700",
+      "bg-amber-100 text-amber-700",
+      "bg-rose-100 text-rose-700",
+      "bg-cyan-100 text-cyan-700",
+      "bg-orange-100 text-orange-700",
+    ],
+    termBadgeClass(term) {
+      var idx = 0;
+      for (var i = 0; i < term.length; i++) idx = (idx * 31 + term.charCodeAt(i)) | 0;
+      return this._TERM_COLORS[Math.abs(idx) % this._TERM_COLORS.length];
+    },
     // ── Column data ─────────────────────────────────────────────────
     get subscribedCourses() {
       var ids = new Set(this.subscribedIds.map(String));

@@ -572,8 +572,13 @@
                          :checked="subsSelMiddle.includes(c.course_id)"
                          @change="toggleSelMiddle(c.course_id, $event.target.checked)">
                   <div class="min-w-0 flex-1">
-                    <p class="font-medium text-gray-800 truncate" x-text="c.title || '(无题)'"></p>
-                    <p class="text-xs text-gray-500 truncate">
+                    <p class="font-medium text-gray-800 truncate">
+                      <span class="inline-block text-[10px] leading-none px-1.5 py-1 rounded font-semibold"
+                            :class="termBadgeClass(c.term)"
+                            x-text="c.term"></span>
+                      <span x-text="c.title || '(无题)'"></span>
+                    </p>
+                    <p class="text-xs text-gray-500 truncate mt-0.5">
                       <span x-text="c.teacher || '—'"></span>
                       <span x-show="c.dept" class="text-gray-400"> · <span x-text="c.dept"></span></span>
                     </p>
