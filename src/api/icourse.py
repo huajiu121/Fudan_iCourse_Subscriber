@@ -207,19 +207,24 @@ class ICourseClient:
     ) -> dict:
         """Get a paginated list of courses for a given term.
 
-        Returns dict with keys: total, courses (list of course dicts)
+        Returns dict with keys: total, courses (list of course dicts).
+        Empty-string filter params are omitted so the API returns all
+        courses rather than searching for "".
         """
         url = f"{self.base_url}/portal/courseapi/v3/multi-search/get-course-list"
-        params = {
+        # Omitting empty-string params matters — some backends treat
+        # ``title=""`` as "search for nothing" rather than "no filter".
+        params: dict[str, str | int] = {
             "tenant": config.TENANT_CODE,
-            "title": "",
             "term": term,
-            "kkxy_code": "",
-            "course_type": "",
-            "course_student_type": "",
             "page": page,
             "per_page": per_page,
         }
+        for key in ("title", "kkxy_code", "course_type", "course_student_type"):
+            val = getattr(config, key.upper(), "") if key.isupper() else ""
+            if not val:
+                continue
+            params[key] = val
         resp = self.vpn.get(url, params=params)
         resp.raise_for_status()
         data = resp.json()
@@ -244,16 +249,23 @@ class ICourseClient:
         the department (``kkxy_name``, ``school_name``, ``dept_name``);
         we pick the first one that's present, falling back to None.
 
-        Pagination stops when the API returns fewer than ``per_page``
-        items OR when ``max_pages`` is exceeded (defensive cap so a
-        misbehaving API doesn't run us forever).
+        Uses the ``total`` from the first API response to know when we've
+        fetched everything.  Falls back to the legacy ``per_page`` count
+        heuristic if the API omits ``total``.
         """
         out: list[dict] = []
         seen: set[str] = set()
-        for page in range(0, max_pages + 1):  # try 0-indexed for safety
+        total_expected: int | None = None
+
+        # Start at page 1 (1-indexed is the iCourse convention)
+        for page in range(1, max_pages + 1):
             result = self.get_course_list(
                 term=term, page=page, per_page=per_page,
             )
+            # Capture total from the first page for completion check
+            if total_expected is None:
+                total_expected = result.get("total") or 0
+
             page_items = result.get("courses", [])
             if not page_items:
                 break
@@ -265,9 +277,6 @@ class ICourseClient:
                 if cid in seen:
                     continue
                 seen.add(cid)
-                # Department field name varies across tenants — try the
-                # ones we've seen and fall back to None rather than
-                # forcing an empty string into the DB.
                 dept = (
                     raw.get("kkxy_name") or raw.get("school_name")
                     or raw.get("dept_name") or raw.get("kkxy") or None
@@ -278,8 +287,19 @@ class ICourseClient:
                     "teacher": raw.get("realname") or raw.get("teacher") or "",
                     "dept": dept,
                 })
+            # Stop if fewer items than requested (last page)
             if len(page_items) < per_page:
                 break
+            # Also stop if we have all courses (total from API)
+            if total_expected and len(out) >= total_expected:
+                break
+
+        if total_expected and len(out) < total_expected:
+            print(
+                f"WARNING: list_semester_courses fetched {len(out)} / "
+                f"{total_expected} courses (page cap reached?).  "
+                "Consider increasing ``max_pages``."
+            )
         return out
 
     def get_lecture_detail(self, course_id: str, sub_id: str) -> dict:
